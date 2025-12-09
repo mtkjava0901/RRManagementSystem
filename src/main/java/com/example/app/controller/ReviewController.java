@@ -17,5 +17,17 @@ public class ReviewController {
 	public String bookReviewList() {
 		return "book/review/list";
 	}
+	
+	// レビュー詳細
+	@GetMapping("/book/review/detail")
+	public String bookReviewDetail() {
+		return "book/review/detail";
+	}
+	
+	// 個別レビュー一覧
+	@GetMapping("/book/review/detail-list")
+	public String bookReviewDetailList() {
+		return "book/review/detail-list";
+	}
 
 }
