@@ -1,0 +1,10 @@
+@charset "UTF-8";
+
+body {
+  padding-bottom: 1rem;
+  font-family: "メイリオ", sans-serif;
+}
+
+.error-message {
+  color: #f00;
+}

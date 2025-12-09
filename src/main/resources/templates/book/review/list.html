@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>新着レビュー一覧</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- ▼ Header ▼ -->
+<header class="bg-dark text-white py-3 mb-4">
+    <div class="container">
+        <div class="d-flex align-items-center position-relative">
+            <h1 class="text-center flex-grow-1 m-0 fs-3">読書記録管理システム</h1>
+            <div class="position-absolute end-0">
+                <a href="/logout" class="btn btn-outline-light btn-sm">ログアウト</a>
+            </div>
+        </div>
+
+        <nav class="mt-3">
+            <ul class="nav justify-content-center">
+                <li class="nav-item"><a href="/" class="nav-link px-3 text-white">トップ</a></li>
+                <li class="nav-item"><a href="/search" class="nav-link px-3 text-white">本を探す</a></li>
+                <li class="nav-item"><a href="/shelf" class="nav-link px-3 text-white">マイ本棚</a></li>
+                <li class="nav-item"><a href="/recommend" class="nav-link px-3 text-white">あなたへのおすすめ</a></li>
+                <li class="nav-item"><a href="/reviews" class="nav-link px-3 text-white">新着レビュー</a></li>
+                <li class="nav-item"><a href="/ranking" class="nav-link px-3 text-white">ランキング</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<!-- ▼ Main ▼ -->
+<div class="container">
+
+    <h2 class="mb-4">みんなの新着レビュー</h2>
+
+    <!-- ▼ レビュー一覧（カード形式） ▼ -->
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+
+        <!-- ▼ 1件目 ▼ -->
+        <div class="col">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">ユーザー：山田太郎</h5>
+                    <h6 class="card-subtitle text-muted mb-2">書籍：君の名は。</h6>
+                    <span class="badge bg-primary">小説</span>
+                    <p class="text-warning mb-2">★★★★☆</p>
+                    <p class="card-text">とても感動しました。映像が頭に浮かぶような描写でした！</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ▼ 2件目 ▼ -->
+        <div class="col">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">ユーザー：佐藤花子</h5>
+                    <h6 class="card-subtitle text-muted mb-2">書籍：ハリーポッターと秘密の部屋</h6>
+                    <span class="badge bg-primary">小説</span>
+                    <p class="text-warning mb-2">★★★★★</p>
+                    <p class="card-text">シリーズで一番好きな巻。テンポも良くて読みやすかった。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ▼ 3件目 ▼ -->
+        <div class="col">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">ユーザー：booklover99</h5>
+                    <h6 class="card-subtitle text-muted mb-2">書籍：人間失格</h6>
+                    <span class="badge bg-primary">小説</span>
+                    <p class="text-warning mb-2">★★★★☆</p>
+                    <p class="card-text">重いテーマだが引き込まれる文体で一気に読んだ。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ▼ 4件目 ▼ -->
+        <div class="col">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">ユーザー：読書好き20</h5>
+                    <h6 class="card-subtitle text-muted mb-2">書籍：夢をかなえるゾウ</h6>
+                    <span class="badge bg-warning text-dark">ビジネス・実用</span>
+                    <p class="text-warning mb-2">★★★☆☆</p>
+                    <p class="card-text">読みやすい自己啓発。軽いノリでスッと入ってくる。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ▼ 5件目 ▼ -->
+        <div class="col">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">ユーザー：ゆき</h5>
+                    <h6 class="card-subtitle text-muted mb-2">書籍：告白</h6>
+                    <span class="badge bg-primary">小説</span>
+                    <p class="text-warning mb-2">★★★★☆</p>
+                    <p class="card-text">衝撃的でページをめくる手が止まらない系の作品。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ▼ 6件目 ▼ -->
+        <div class="col">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">ユーザー：tomo</h5>
+                    <h6 class="card-subtitle text-muted mb-2">書籍：アルケミスト</h6>
+                    <span class="badge bg-warning text-dark">ビジネス・実用</span>
+                    <p class="text-warning mb-2">★★★★☆</p>
+                    <p class="card-text">人生の指針になりそうな名言が多い本でした。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ▼ 7件目 ▼ -->
+        <div class="col">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">ユーザー：ナオ</h5>
+                    <h6 class="card-subtitle text-muted mb-2">書籍：吾輩は猫である</h6>
+                    <span class="badge bg-primary">小説</span>
+                    <p class="text-warning mb-2">★★★☆☆</p>
+                    <p class="card-text">古典だけど読みやすい。猫の語り口が面白い。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ▼ 8件目 ▼ -->
+        <div class="col">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">ユーザー：kz読書部</h5>
+                    <h6 class="card-subtitle text-muted mb-2">書籍：シャーロック・ホームズの冒険</h6>
+                    <span class="badge bg-primary">小説</span>
+                    <p class="text-warning mb-2">★★★★★</p>
+                    <p class="card-text">短編のまとまりが良く何度でも読み返せる名作。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ▼ 9件目 ▼ -->
+        <div class="col">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">ユーザー：読書家A</h5>
+                    <h6 class="card-subtitle text-muted mb-2">書籍：アラジンと魔法のランプ</h6>
+                    <span class="badge bg-success">漫画</span>
+                    <p class="text-warning mb-2">★★★☆☆</p>
+                    <p class="card-text">ファンタジー好きなら楽しめる内容でした。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ▼ 10件目 ▼ -->
+        <div class="col">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">ユーザー：libraryfan</h5>
+                    <h6 class="card-subtitle text-muted mb-2">書籍：1984</h6>
+                    <span class="badge bg-primary">小説</span>
+                    <p class="text-warning mb-2">★★★★★</p>
+                    <p class="card-text">読むたびに解釈が変わる深い作品。考えさせられる。</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ▼ ページネーション ▼ -->
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+            <li class="page-item disabled"><a class="page-link">前へ</a></li>
+            <li class="page-item active"><a class="page-link">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">次へ</a></li>
+        </ul>
+    </nav>
+
+    <!-- ▼ トップへ戻るボタン ▼ -->
+    <div class="text-center mt-5">
+        <a href="/" class="btn btn-secondary">トップページへ戻る</a>
+    </div>
+
+</div>
+
+<!-- ▼ Footer ▼ -->
+<footer class="mt-5 py-3 bg-dark text-center text-white">
+    © 読書記録管理システム
+</footer>
+
+</body>
+</html>

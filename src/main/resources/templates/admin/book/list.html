@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>書籍一覧（管理）</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+    <!-- ナビバー -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/admin/list">管理者ページ</a>
+
+            <div class="d-flex">
+                <a href="/admin/logout" class="btn btn-outline-light">ログアウト</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-5">
+
+        <!-- ▼ ページタイトル ▼ -->
+        <h2 class="mb-4">書籍一覧</h2>
+
+        <!-- ▼ 成功メッセージ（任意表示） ▼ -->
+        <!-- 条件により表示 -->
+        <!--
+        <div class="alert alert-success text-center" role="alert">
+            書籍の削除が完了しました。
+        </div>
+        -->
+
+        <!-- ▼ 書籍一覧テーブル ▼ -->
+        <div class="card shadow-sm">
+            <div class="card-body">
+
+                <table class="table table-bordered table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 60px;">ID</th>
+                            <th>書籍名</th>
+                            <th style="width: 160px;">著者</th>
+                            <th style="width: 160px;">出版社</th>
+                            <th style="width: 120px;">発行日</th>
+                            <th style="width: 140px;">ジャンル</th>
+                            <th style="width: 180px;">登録日時</th>
+                            <th style="width: 160px;">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <!-- ▼ 1件目（例） ▼ -->
+                        <tr>
+                            <td>501</td>
+                            <td>エンジニアのためのJava入門</td>
+                            <td>山田太郎</td>
+                            <td>技術出版</td>
+                            <td>2024-11-10</td>
+                            <td>ビジネス･実用書</td>
+                            <td>2025-12-05 14:20</td>
+                            <td>
+                                <a href="/admin/book/edit/501" class="btn btn-sm btn-primary">編集</a>
+                                <a href="/admin/book/delete/501" class="btn btn-sm btn-danger">削除</a>
+                            </td>
+                        </tr>
+
+                        <!-- ▼ 2件目（例） ▼ -->
+                        <tr>
+                            <td>500</td>
+                            <td>星の王子さま</td>
+                            <td>サン＝テグジュペリ</td>
+                            <td>文学社</td>
+                            <td>2020-04-30</td>
+                            <td>小説</td>
+                            <td>2025-12-04 10:05</td>
+                            <td>
+                                <a href="/admin/book/edit/500" class="btn btn-sm btn-primary">編集</a>
+                                <a href="/admin/book/delete/500" class="btn btn-sm btn-danger">削除</a>
+                            </td>
+                        </tr>
+
+                        <!-- ▼ 3件目（例） ▼ -->
+                        <tr>
+                            <td>499</td>
+                            <td>ビジネス思考大全</td>
+                            <td>田中実</td>
+                            <td>実用出版</td>
+                            <td>2023-08-10</td>
+                            <td>ビジネス･実用書</td>
+                            <td>2025-12-03 18:12</td>
+                            <td>
+                                <a href="/admin/book/edit/499" class="btn btn-sm btn-primary">編集</a>
+                                <a href="/admin/book/delete/499" class="btn btn-sm btn-danger">削除</a>
+                            </td>
+                        </tr>
+
+                        <!-- ▼ 以降、新着10件までループで表示 ▼ -->
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+        <!-- ▼ ページネーション ▼ -->
+        <nav class="mt-4">
+            <ul class="pagination justify-content-center">
+                <li class="page-item disabled"><a class="page-link">前へ</a></li>
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">次へ</a></li>
+            </ul>
+        </nav>
+
+        <!-- ▼ 管理メニューへ戻るボタン ▼ -->
+        <div class="text-center mt-4">
+            <a href="/admin/list" class="btn btn-secondary">管理メニューへ戻る</a>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
