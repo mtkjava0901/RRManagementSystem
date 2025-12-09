@@ -13,7 +13,7 @@
     <div class="container-fluid">
         <a class="navbar-brand" href="/admin/list">管理者ページ</a>
         <div>
-            <a href="/admin/logout" class="btn btn-outline-light">ログアウト</a>
+            <a href="/admin/login" class="btn btn-outline-light">ログアウト</a>
         </div>
     </div>
 </nav>
@@ -22,15 +22,28 @@
 
     <h2 class="mb-4">お知らせ登録・編集</h2>
 
-    <!-- ▼ メッセージ出力（成功 / エラー）※必要時のみ表示 ▼ -->
-    <!-- <div class="alert alert-success">登録に成功しました。</div> -->
-    <!-- <div class="alert alert-danger">エラーが発生しました。</div> -->
-    <!-- ▲ メッセージエリア ▲ -->
-
     <div class="card shadow-sm">
         <div class="card-body">
 
             <form action="/admin/news/create" method="post">
+
+                <!-- ▼ 追加：ジャンル ▼ -->
+                <div class="mb-3">
+                    <label for="newsGenre" class="form-label">ジャンル</label>
+                    <select class="form-select" id="newsGenre" name="genre" required>
+                        <option value="">選択してください</option>
+                        <option value="INFO">INFO</option>
+                        <option value="UPDATE">UPDATE</option>
+                        <option value="NOTICE">NOTICE</option>
+                        <option value="MAINT">MAINT</option>
+                    </select>
+                </div>
+
+                <!-- ▼ 追加：日付 ▼ -->
+                <div class="mb-3">
+                    <label for="newsDate" class="form-label">日付</label>
+                    <input type="date" class="form-control" id="newsDate" name="date" required>
+                </div>
 
                 <!-- タイトル -->
                 <div class="mb-3">
@@ -40,13 +53,13 @@
 
                 <!-- 本文 -->
                 <div class="mb-3">
-                    <label for="newsContent" class="form-label">お知らせ本文</label>
+                    <label for="newsContent" class="form-label">本文</label>
                     <textarea class="form-control" id="newsContent" name="content" rows="6" placeholder="本文を入力" required></textarea>
                 </div>
 
                 <!-- ボタン -->
                 <div class="d-flex justify-content-between mt-4">
-                    <a href="/admin/list" class="btn btn-secondary">キャンセル</a>
+                    <a href="/admin/notif/list" class="btn btn-secondary">キャンセル</a>
                     <button type="submit" class="btn btn-primary">登録</button>
                 </div>
 
