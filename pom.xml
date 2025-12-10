@@ -85,9 +85,14 @@
 			<version>4.0.0</version>
 			<scope>test</scope>
 		</dependency>
-		
 
-		
+
+
+		<dependency>
+			<groupId>com.example</groupId>
+			<artifactId>EducationSystem</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 	<build>
