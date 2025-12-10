@@ -1,233 +1,413 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
-    <meta charset="UTF-8">
-    <title>ランキング</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+	<meta charset="UTF-8">
+	<title>ランキング</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+	<style>
+		.rank-1 {
+			background: #fff8dc;
+		}
+
+		/* gold系 */
+		.rank-2 {
+			background: #f5f5f5;
+		}
+
+		/* silver系 */
+		.rank-3 {
+			background: #fdf2e9;
+		}
+
+		/* bronze系 */
+
+		.list-group-item-link:hover {
+			background: #f8f9fa;
+		}
+	</style>
 </head>
+
 <body>
 
-<!-- ▼ Header ▼ -->
-<header class="bg-dark text-white py-3 mb-4">
-    <div class="container">
-        <div class="d-flex align-items-center position-relative">
-            <h1 class="text-center flex-grow-1 m-0 fs-3">読書記録管理システム</h1>
-            <div class="position-absolute end-0">
-                <a href="/logout" class="btn btn-outline-light btn-sm">ログアウト</a>
-            </div>
-        </div>
+	<!-- ▼ Header ▼ -->
+	<header class="bg-dark text-white py-3 mb-4">
+		<div class="container">
+			<div class="d-flex align-items-center position-relative">
+				<h1 class="text-center flex-grow-1 m-0 fs-3">読書記録管理システム</h1>
+				<div class="position-absolute end-0">
+					<a href="/logout" class="btn btn-outline-light btn-sm">ログアウト</a>
+				</div>
+			</div>
 
-        <nav class="mt-3">
-            <ul class="nav justify-content-center">
-                <li class="nav-item"><a href="/" class="nav-link px-3 text-white">トップ</a></li>
-                <li class="nav-item"><a href="/search" class="nav-link px-3 text-white">本を探す</a></li>
-                <li class="nav-item"><a href="/shelf" class="nav-link px-3 text-white">マイ本棚</a></li>
-                <li class="nav-item"><a href="/recommend" class="nav-link px-3 text-white">あなたへのおすすめ</a></li>
-                <li class="nav-item"><a href="/reviews" class="nav-link px-3 text-white">新着レビュー</a></li>
-                <li class="nav-item"><a href="/ranking" class="nav-link px-3 text-white">ランキング</a></li>
-            </ul>
-        </nav>
-    </div>
-</header>
+			<nav class="mt-3">
+				<ul class="nav justify-content-center">
+					<li class="nav-item"><a href="/home" class="nav-link px-3 text-white">トップ</a></li>
+					<li class="nav-item"><a href="/book/search" class="nav-link px-3 text-white">本を探す</a></li>
+					<li class="nav-item"><a href="/book/list" class="nav-link px-3 text-white">マイ本棚</a></li>
+					<li class="nav-item"><a href="/book/recommend" class="nav-link px-3 text-white">あなたへのおすすめ</a></li>
+					<li class="nav-item"><a href="/book/review/list" class="nav-link px-3 text-white">新着レビュー</a></li>
+					<li class="nav-item"><a href="/book/ranking" class="nav-link px-3 text-white">ランキング</a></li>
+				</ul>
+			</nav>
+		</div>
+	</header>
 
-<!-- ▼ Main ▼ -->
-<div class="container">
+	<!-- ▼ Main ▼ -->
+	<div class="container">
 
-    <h2 class="mb-4">人気書籍ランキング</h2>
+		<h2 class="mb-4">人気書籍ランキング</h2>
 
-    <!-- ▼ タブ切り替え ▼ -->
-    <ul class="nav nav-tabs mb-3" id="rankingTabs" role="tablist">
-        <li class="nav-item">
-            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#all" type="button">すべて</button>
-        </li>
-        <li class="nav-item">
-            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#novel" type="button">小説</button>
-        </li>
-        <li class="nav-item">
-            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#comic" type="button">漫画</button>
-        </li>
-        <li class="nav-item">
-            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#business" type="button">ビジネス・実用</button>
-        </li>
-        <li class="nav-item">
-            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#other" type="button">その他</button>
-        </li>
-    </ul>
+		<!-- ▼ タブ切り替え ▼ -->
+		<ul class="nav nav-tabs mb-3" id="rankingTabs" role="tablist">
+			<li class="nav-item">
+				<button class="nav-link active" data-bs-toggle="tab" data-bs-target="#all" type="button">すべて</button>
+			</li>
+			<li class="nav-item">
+				<button class="nav-link" data-bs-toggle="tab" data-bs-target="#novel" type="button">小説</button>
+			</li>
+			<li class="nav-item">
+				<button class="nav-link" data-bs-toggle="tab" data-bs-target="#comic" type="button">漫画</button>
+			</li>
+			<li class="nav-item">
+				<button class="nav-link" data-bs-toggle="tab" data-bs-target="#business" type="button">ビジネス・実用</button>
+			</li>
+			<li class="nav-item">
+				<button class="nav-link" data-bs-toggle="tab" data-bs-target="#other" type="button">その他</button>
+			</li>
+		</ul>
 
-    <!-- ▼ タブ内容（ランキング） ▼ -->
-    <div class="tab-content">
+		<!-- ▼ タブ内容（ランキング） ▼ -->
+		<div class="tab-content">
 
-        <!-- ▼ すべて ▼ -->
-        <div class="tab-pane fade show active" id="all">
-            <div class="list-group mb-4">
-                <!-- 1 -->
-                <div class="list-group-item">
-                    <h5 class="mb-1">1位：君の名は。</h5>
-                    <p class="mb-1 text-muted">著者：新海誠</p>
-                    <span class="badge bg-primary">小説</span>
-                    <p class="mb-1">マイ本棚登録数：120件</p>
-                </div>
-                <!-- 2 -->
-                <div class="list-group-item">
-                    <h5 class="mb-1">2位：ワンピース</h5>
-                    <p class="mb-1 text-muted">著者：尾田栄一郎</p>
-                    <span class="badge bg-success">漫画</span>
-                    <p class="mb-1">マイ本棚登録数：110件</p>
-                </div>
-                <!-- 3 -->
-                <div class="list-group-item">
-                    <h5 class="mb-1">3位：夢をかなえるゾウ</h5>
-                    <p class="mb-1 text-muted">著者：水野敬也</p>
-                    <span class="badge bg-warning text-dark">ビジネス・実用</span>
-                    <p class="mb-1">マイ本棚登録数：105件</p>
-                </div>
+			<!-- ▼ すべて ▼ -->
+			<div class="tab-pane fade show active" id="all">
+				<div class="list-group mb-4">
+					<!-- 1 -->
+					<a href="/book/review/detail-list" class="list-group-item rank-1">
+						<h5 class="mb-1"><i class="bi bi-trophy-fill text-warning"></i>1位：君の名は。</h5>
+						<p class="mb-1 text-muted">著者：新海誠</p>
+						<span class="badge bg-primary">小説</span>
+						<p class="mb-1">マイ本棚登録数：120件</p>
+					</a>
+					<!-- 2 -->
+					<a href="/book/review/detail-list" class="list-group-item rank-2">
+						<h5 class="mb-1"><i class="bi bi-trophy-fill text-secondary"></i>2位：ワンピース</h5>
+						<p class="mb-1 text-muted">著者：尾田栄一郎</p>
+						<span class="badge bg-success">漫画</span>
+						<p class="mb-1">マイ本棚登録数：110件</p>
+					</a>
+					<!-- 3 -->
+					<a href="/book/review/detail-list" class="list-group-item rank-3">
+						<h5 class="mb-1"><i class="bi bi-trophy-fill" style="color: #cd7f32;"></i>3位：夢をかなえるゾウ</h5>
+						<p class="mb-1 text-muted">著者：水野敬也</p>
+						<span class="badge bg-warning text-dark">ビジネス・実用</span>
+						<p class="mb-1">マイ本棚登録数：105件</p>
+					</a>
 
-                <!-- ▼ ダミー4〜10 ▼ -->
-                <div class="list-group-item">
-                    <h5 class="mb-1">4位：人間失格</h5>
-                    <p class="mb-1 text-muted">著者：太宰治</p>
-                    <span class="badge bg-primary">小説</span>
-                    <p class="mb-1">マイ本棚登録数：98件</p>
-                </div>
-                <div class="list-group-item">
-                    <h5 class="mb-1">5位：鋼の錬金術師</h5>
-                    <p class="mb-1 text-muted">著者：荒川弘</p>
-                    <span class="badge bg-success">漫画</span>
-                    <p class="mb-1">マイ本棚登録数：93件</p>
-                </div>
-                <div class="list-group-item">
-                    <h5 class="mb-1">6位：嫌われる勇気</h5>
-                    <p class="mb-1 text-muted">著者：岸見一郎・古賀史健</p>
-                    <span class="badge bg-warning text-dark">ビジネス・実用</span>
-                    <p class="mb-1">マイ本棚登録数：91件</p>
-                </div>
-                <div class="list-group-item">
-                    <h5 class="mb-1">7位：走れメロス</h5>
-                    <p class="mb-1 text-muted">著者：太宰治</p>
-                    <span class="badge bg-primary">小説</span>
-                    <p class="mb-1">マイ本棚登録数：87件</p>
-                </div>
-                <div class="list-group-item">
-                    <h5 class="mb-1">8位：ドラえもん</h5>
-                    <p class="mb-1 text-muted">著者：藤子・F・不二雄</p>
-                    <span class="badge bg-success">漫画</span>
-                    <p class="mb-1">マイ本棚登録数：82件</p>
-                </div>
-                <div class="list-group-item">
-                    <h5 class="mb-1">9位：FACTFULNESS</h5>
-                    <p class="mb-1 text-muted">著者：ハンス・ロスリング</p>
-                    <span class="badge bg-warning text-dark">ビジネス・実用</span>
-                    <p class="mb-1">マイ本棚登録数：80件</p>
-                </div>
-                <div class="list-group-item">
-                    <h5 class="mb-1">10位：現代アート入門</h5>
-                    <p class="mb-1 text-muted">著者：不明</p>
-                    <span class="badge bg-secondary">その他</span>
-                    <p class="mb-1">マイ本棚登録数：78件</p>
-                </div>
-            </div>
-        </div>
+					<!-- ▼ ダミー4〜10 ▼ -->
+					<a href="/book/review/detail-list" class="list-group-item">
+						<h5 class="mb-1">4位：人間失格</h5>
+						<p class="mb-1 text-muted">著者：太宰治</p>
+						<span class="badge bg-primary">小説</span>
+						<p class="mb-1">マイ本棚登録数：98件</p>
+					</a>
+					<a href="/book/review/detail-list" class="list-group-item">
+						<h5 class="mb-1">5位：鋼の錬金術師</h5>
+						<p class="mb-1 text-muted">著者：荒川弘</p>
+						<span class="badge bg-success">漫画</span>
+						<p class="mb-1">マイ本棚登録数：93件</p>
+					</a>
+					<a href="/book/review/detail-list" class="list-group-item">
+						<h5 class="mb-1">6位：嫌われる勇気</h5>
+						<p class="mb-1 text-muted">著者：岸見一郎・古賀史健</p>
+						<span class="badge bg-warning text-dark">ビジネス・実用</span>
+						<p class="mb-1">マイ本棚登録数：91件</p>
+					</a>
+					<a href="/book/review/detail-list" class="list-group-item">
+						<h5 class="mb-1">7位：走れメロス</h5>
+						<p class="mb-1 text-muted">著者：太宰治</p>
+						<span class="badge bg-primary">小説</span>
+						<p class="mb-1">マイ本棚登録数：87件</p>
+					</a>
+					<a href="/book/review/detail-list" class="list-group-item">
+						<h5 class="mb-1">8位：ドラえもん</h5>
+						<p class="mb-1 text-muted">著者：藤子・F・不二雄</p>
+						<span class="badge bg-success">漫画</span>
+						<p class="mb-1">マイ本棚登録数：82件</p>
+					</a>
+					<a href="/book/review/detail-list" class="list-group-item">
+						<h5 class="mb-1">9位：FACTFULNESS</h5>
+						<p class="mb-1 text-muted">著者：ハンス・ロスリング</p>
+						<span class="badge bg-warning text-dark">ビジネス・実用</span>
+						<p class="mb-1">マイ本棚登録数：80件</p>
+					</a>
+					<a href="/book/review/detail-list" class="list-group-item">
+						<h5 class="mb-1">10位：現代アート入門</h5>
+						<p class="mb-1 text-muted">著者：不明</p>
+						<span class="badge bg-secondary">その他</span>
+						<p class="mb-1">マイ本棚登録数：78件</p>
+					</a>
+				</div>
+			</div>
 
-        <!-- ▼ 小説 ▼ -->
-        <div class="tab-pane fade" id="novel">
-            <div class="list-group mb-4">
-                <div class="list-group-item">
-                    <h5 class="mb-1">1位：君の名は。</h5>
-                    <p class="mb-1 text-muted">著者：新海誠</p>
-                    <span class="badge bg-primary">小説</span>
-                    <p class="mb-1">マイ本棚登録数：120件</p>
-                </div>
-                <div class="list-group-item">
-                    <h5 class="mb-1">2位：人間失格</h5>
-                    <p class="mb-1 text-muted">著者：太宰治</p>
-                    <span class="badge bg-primary">小説</span>
-                    <p class="mb-1">マイ本棚登録数：98件</p>
-                </div>
-                <div class="list-group-item">
-                    <h5 class="mb-1">3位：走れメロス</h5>
-                    <p class="mb-1 text-muted">著者：太宰治</p>
-                    <span class="badge bg-primary">小説</span>
-                    <p class="mb-1">マイ本棚登録数：87件</p>
-                </div>
+			<!-- ▼ 小説 ▼ -->
+			<div class="tab-pane fade" id="novel">
+				<div class="list-group mb-4">
+					<a href="/book/review/detail-list" class="list-group-item rank-1">
+						<h5 class="mb-1"><i class="bi bi-trophy-fill text-warning"></i>
+							1位：君の名は。</h5>
+						<p class="mb-1 text-muted">著者：新海誠</p>
+						<span class="badge bg-primary">小説</span>
+						<p class="mb-1">マイ本棚登録数：120件</p>
+					</a>
+					<a href="/book/review/detail-list" class="list-group-item rank-2">
+						<h5 class="mb-1"><i class="bi bi-trophy-fill text-secondary"></i>2位：人間失格</h5>
+						<p class="mb-1 text-muted">著者：太宰治</p>
+						<span class="badge bg-primary">小説</span>
+						<p class="mb-1">マイ本棚登録数：98件</p>
+					</a>
+					<a href="/book/review/detail-list" class="list-group-item rank-3">
+						<h5 class="mb-1"><i class="bi bi-trophy-fill" style="color: #cd7f32;"></i>3位：走れメロス</h5>
+						<p class="mb-1 text-muted">著者：太宰治</p>
+						<span class="badge bg-primary">小説</span>
+						<p class="mb-1">マイ本棚登録数：87件</p>
+					</a>
 
-                <!-- ダミー7件 -->
-                <div class="list-group-item"><h5 class="mb-1">4位：こころ</h5><p class="mb-1 text-muted">著者：夏目漱石</p><span class="badge bg-primary">小説</span><p>マイ本棚登録数：80件</p></div>
-                <div class="list-group-item"><h5 class="mb-1">5位：ノルウェイの森</h5><p class="mb-1 text-muted">著者：村上春樹</p><span class="badge bg-primary">小説</span><p>マイ本棚登録数：75件</p></div>
-                <div class="list-group-item"><h5 class="mb-1">6位：文学少女</h5><p class="mb-1 text-muted">著者：野村美月</p><span class="badge bg-primary">小説</span><p>マイ本棚登録数：72件</p></div>
-                <div class="list-group-item"><h5 class="mb-1">7位：スイミー</h5><p class="mb-1 text-muted">著者：レオ・レオニ</p><span class="badge bg-primary">小説</span><p>マイ本棚登録数：70件</p></div>
-                <div class="list-group-item"><h5 class="mb-1">8位：銀河鉄道の夜</h5><p class="mb-1 text-muted">著者：宮沢賢治</p><span class="badge bg-primary">小説</span><p>マイ本棚登録数：68件</p></div>
-                <div class="list-group-item"><h5 class="mb-1">9位：夜は短し歩けよ乙女</h5><p class="mb-1 text-muted">著者：森見登美彦</p><span class="badge bg-primary">小説</span><p>マイ本棚登録数：65件</p></div>
-                <div class="list-group-item"><h5 class="mb-1">10位：デミアン</h5><p class="mb-1 text-muted">著者：ヘルマン・ヘッセ</p><span class="badge bg-primary">小説</span><p>マイ本棚登録数：60件</p></div>
-            </div>
-        </div>
+					<!-- ダミー7件 -->
+					<a href="/book/review/detail-list" class="list-group-item">
+						<h5 class="mb-1">4位：こころ</h5>
+						<p class="mb-1 text-muted">著者：夏目漱石</p><span class="badge bg-primary">小説</span>
+						<p>マイ本棚登録数：80件</p>
+					</a>
+					<a href="/book/review/detail-list" class="list-group-item">
+						<h5 class="mb-1">5位：ノルウェイの森</h5>
+						<p class="mb-1 text-muted">著者：村上春樹</p><span class="badge bg-primary">小説</span>
+						<p>マイ本棚登録数：75件</p>
+					</a>
+					<a href="/book/review/detail-list" class="list-group-item">
+						<h5 class="mb-1">6位：文学少女</h5>
+						<p class="mb-1 text-muted">著者：野村美月</p><span class="badge bg-primary">小説</span>
+						<p>マイ本棚登録数：72件</p>
+					</a>
+					<a href="/book/review/detail-list" class="list-group-item">
+						<h5 class="mb-1">7位：スイミー</h5>
+						<p class="mb-1 text-muted">著者：レオ・レオニ</p><span class="badge bg-primary">小説</span>
+						<p>マイ本棚登録数：70件</p>
+					</a>
+					<a href="/book/review/detail-list" class="list-group-item">
+						<h5 class="mb-1">8位：銀河鉄道の夜</h5>
+						<p class="mb-1 text-muted">著者：宮沢賢治</p><span class="badge bg-primary">小説</span>
+						<p>マイ本棚登録数：68件</p>
+					</a>
+					<a class="list-group-item">
+						<h5 class="mb-1">9位：夜は短し歩けよ乙女</h5>
+						<p class="mb-1 text-muted">著者：森見登美彦</p><span class="badge bg-primary">小説</span>
+						<p>マイ本棚登録数：65件</p>
+					</a>
+					<a href="/book/review/detail-list" class="list-group-item">
+						<h5 class="mb-1">10位：デミアン</h5>
+						<p class="mb-1 text-muted">著者：ヘルマン・ヘッセ</p><span class="badge bg-primary">小説</span>
+						<p>マイ本棚登録数：60件</p>
+					</a>
+				</div>
+			</div>
 
-        <!-- ▼ 漫画 ▼ -->
-        <div class="tab-pane fade" id="comic">
-            <div class="list-group mb-4">
-                <div class="list-group-item"><h5 class="mb-1">1位：ワンピース</h5><p class="mb-1 text-muted">著者：尾田栄一郎</p><span class="badge bg-success">漫画</span><p>マイ本棚登録数：110件</p></div>
-                <div class="list-group-item"><h5 class="mb-1">2位：鋼の錬金術師</h5><p class="mb-1 text-muted">著者：荒川弘</p><span class="badge bg-success">漫画</span><p>マイ本棚登録数：93件</p></div>
-                <div class="list-group-item"><h5 class="mb-1">3位：ドラえもん</h5><p class="mb-1 text-muted">著者：藤子・F・不二雄</p><span class="badge bg-success">漫画</span><p>マイ本棚登録数：82件</p></div>
+			<!-- ▼ 漫画 ▼ -->
+			<div class="tab-pane fade" id="comic">
+				<div class="list-group mb-4">
+					<a href="/book/review/detail-list" class="list-group-item rank-1">
+						<h5 class="mb-1"><i class="bi bi-trophy-fill text-warning"></i>1位：ワンピース</h5>
+						<p class="mb-1 text-muted">著者：尾田栄一郎</p><span class="badge bg-success">漫画</span>
+						<p>マイ本棚登録数：110件</p>
+					</a>
+					<a href="/book/review/detail-list" class="list-group-item rank-2">
+						<h5 class="mb-1"><i class="bi bi-trophy-fill text-secondary"></i>2位：鋼の錬金術師</h5>
+						<p class="mb-1 text-muted">著者：荒川弘</p><span class="badge bg-success">漫画</span>
+						<p>マイ本棚登録数：93件</p>
+					</a>
+					<a href="/book/review/detail-list" class="list-group-item rank-3">
+						<h5 class="mb-1"><i class="bi bi-trophy-fill" style="color: #cd7f32;"></i>3位：ドラえもん</h5>
+						<p class="mb-1 text-muted">著者：藤子・F・不二雄</p><span class="badge bg-success">漫画</span>
+						<p>マイ本棚登録数：82件</p>
+					</a>
 
-                <!-- ダミー -->
-                <div class="list-group-item"><h5 class="mb-1">4位：スラムダンク</h5><p class="mb-1 text-muted">著者：井上雄彦</p><span class="badge bg-success">漫画</span><p>マイ本棚登録数：80件</p></div>
-                <div class="list-group-item"><h5 class="mb-1">5位：ジョジョの奇妙な冒険</h5><p class="mb-1 text-muted">著者：荒木飛呂彦</p><span class="badge bg-success">漫画</span><p>マイ本棚登録数：78件</p></div>
-                <div class="list-group-item"><h5 class="mb-1">6位：ナルト</h5><p class="mb-1 text-muted">著者：岸本斉史</p><span class="badge bg-success">漫画</span><p>マイ本棚登録数：70件</p></div>
-                <div class="list-group-item"><h5 class="mb-1">7位：ブリーチ</h5><p class="mb-1 text-muted">著者：久保帯人</p><span class="badge bg-success">漫画</span><p>マイ本棚登録数：68件</p></div>
-                <div class="list-group-item"><h5 class="mb-1">8位：進撃の巨人</h5><p class="mb-1 text-muted">著者：諫山創</p><span class="badge bg-success">漫画</span><p>マイ本棚登録数：66件</p></div>
-                <div class="list-group-item"><h5 class="mb-1">9位：キングダム</h5><p class="mb-1 text-muted">著者：原泰久</p><span class="badge bg-success">漫画</span><p>マイ本棚登録数：63件</p></div>
-                <div class="list-group-item"><h5 class="mb-1">10位：BLEACH</h5><p class="mb-1 text-muted">著者：久保帯人</p><span class="badge bg-success">漫画</span><p>マイ本棚登録数：60件</p></div>
-            </div>
-        </div>
+					<!-- ダミー -->
+					<a href="/book/review/detail-list" class="list-group-item">
+						<h5 class="mb-1">4位：スラムダンク</h5>
+						<p class="mb-1 text-muted">著者：井上雄彦</p><span class="badge bg-success">漫画</span>
+						<p>マイ本棚登録数：80件</p>
+					</a>
+					<a href="/book/review/detail-list" class="list-group-item">
+						<h5 class="mb-1">5位：ジョジョの奇妙な冒険</h5>
+						<p class="mb-1 text-muted">著者：荒木飛呂彦</p><span class="badge bg-success">漫画</span>
+						<p>マイ本棚登録数：78件</p>
+					</a>
+					<a href="/book/review/detail-list" class="list-group-item">
+						<h5 class="mb-1">6位：ナルト</h5>
+						<p class="mb-1 text-muted">著者：岸本斉史</p><span class="badge bg-success">漫画</span>
+						<p>マイ本棚登録数：70件</p>
+					</a>
+					<a href="/book/review/detail-list" class="list-group-item">
+						<h5 class="mb-1">7位：ブリーチ</h5>
+						<p class="mb-1 text-muted">著者：久保帯人</p><span class="badge bg-success">漫画</span>
+						<p>マイ本棚登録数：68件</p>
+					</a>
+					<a href="/book/review/detail-list" class="list-group-item">
+						<h5 class="mb-1">8位：進撃の巨人</h5>
+						<p class="mb-1 text-muted">著者：諫山創</p><span class="badge bg-success">漫画</span>
+						<p>マイ本棚登録数：66件</p>
+					</a>
+					<a href="/book/review/detail-list" class="list-group-item">
+						<h5 class="mb-1">9位：キングダム</h5>
+						<p class="mb-1 text-muted">著者：原泰久</p><span class="badge bg-success">漫画</span>
+						<p>マイ本棚登録数：63件</p>
+					</a>
+					<a href="/book/review/detail-list" class="list-group-item">
+						<h5 class="mb-1">10位：BLEACH</h5>
+						<p class="mb-1 text-muted">著者：久保帯人</p><span class="badge bg-success">漫画</span>
+						<p>マイ本棚登録数：60件</p>
+					</a>
+				</div>
+			</div>
 
-        <!-- ▼ ビジネス・実用 ▼ -->
-        <div class="tab-pane fade" id="business">
-            <div class="list-group mb-4">
-                <div class="list-group-item"><h5 class="mb-1">1位：夢をかなえるゾウ</h5><p class="mb-1 text-muted">著者：水野敬也</p><span class="badge bg-warning text-dark">ビジネス・実用</span><p>マイ本棚登録数：105件</p></div>
-                <div class="list-group-item"><h5 class="mb-1">2位：嫌われる勇気</h5><p class="mb-1 text-muted">著者：岸見一郎・古賀史健</p><span class="badge bg-warning text-dark">ビジネス・実用</span><p>マイ本棚登録数：91件</p></div>
-                <div class="list-group-item"><h5 class="mb-1">3位：FACTFULNESS</h5><p class="mb-1 text-muted">著者：ハンス・ロスリング</p><span class="badge bg-warning text-dark">ビジネス・実用</span><p>マイ本棚登録数：80件</p></div>
+			<!-- ▼ ビジネス・実用 ▼ -->
+			<div class="tab-pane fade" id="business">
+				<div class="list-group mb-4">
+					<a href="/book/review/detail-list" class="list-group-item rank-1">
+						<h5 class="mb-1"><i class="bi bi-trophy-fill text-warning"></i>1位：夢をかなえるゾウ</h5>
+						<p class="mb-1 text-muted">著者：水野敬也</p><span class="badge bg-warning text-dark">ビジネス・実用</span>
+						<p>マイ本棚登録数：105件</p>
+					</a>
+					<a href="/book/review/detail-list" class="list-group-item rank-2">
+						<h5 class="mb-1"><i class="bi bi-trophy-fill text-secondary"></i>2位：嫌われる勇気</h5>
+						<p class="mb-1 text-muted">著者：岸見一郎・古賀史健</p><span
+							class="badge bg-warning text-dark">ビジネス・実用</span>
+						<p>マイ本棚登録数：91件</p>
+					</a>
+					<a href="/book/review/detail-list" class="list-group-item rank-3">
+						<h5 class="mb-1"><i class="bi bi-trophy-fill" style="color: #cd7f32;"></i>3位：FACTFULNESS</h5>
+						<p class="mb-1 text-muted">著者：ハンス・ロスリング</p><span
+							class="badge bg-warning text-dark">ビジネス・実用</span>
+						<p>マイ本棚登録数：80件</p>
+					</a>
 
-                <!-- ダミー -->
-                <div class="list-group-item"><h5 class="mb-1">4位：LIFE SHIFT</h5><p class="mb-1 text-muted">著者：リンダ・グラットン</p><span class="badge bg-warning text-dark">ビジネス・実用</span><p>マイ本棚登録数：76件</p></div>
-                <div class="list-group-item"><h5 class="mb-1">5位：エッセンシャル思考</h5><p class="mb-1 text-muted">著者：グレッグ・マキューン</p><span class="badge bg-warning text-dark">ビジネス・実用</span><p>マイ本棚登録数：74件</p></div>
-                <div class="list-group-item"><h5 class="mb-1">6位：7つの習慣</h5><p class="mb-1 text-muted">著者：スティーブン・R・コヴィー</p><span class="badge bg-warning text-dark">ビジネス・実用</span><p>マイ本棚登録数：72件</p></div>
-                <div class="list-group-item"><h5 class="mb-1">7位：アウトプット大全</h5><p class="mb-1 text-muted">著者：樺沢紫苑</p><span class="badge bg-warning text-dark">ビジネス・実用</span><p>マイ本棚登録数：68件</p></div>
-                <div class="list-group-item"><h5 class="mb-1">8位：影響力の武器</h5><p class="mb-1 text-muted">著者：ロバート・チャルディーニ</p><span class="badge bg-warning text-dark">ビジネス・実用</span><p>マイ本棚登録数：65件</p></div>
-                <div class="list-group-item"><h5 class="mb-1">9位：ゼロ秒思考</h5><p class="mb-1 text-muted">著者：赤羽雄二</p><span class="badge bg-warning text-dark">ビジネス・実用</span><p>マイ本棚登録数：63件</p></div>
-                <div class="list-group-item"><h5 class="mb-1">10位：イシューからはじめよ</h5><p class="mb-1 text-muted">著者：安宅和人</p><span class="badge bg-warning text-dark">ビジネス・実用</span><p>マイ本棚登録数：60件</p></div>
-            </div>
-        </div>
+					<!-- ダミー -->
+					<a href="/book/review/detail-list" class="list-group-item">
+						<h5 class="mb-1">4位：LIFE SHIFT</h5>
+						<p class="mb-1 text-muted">著者：リンダ・グラットン</p><span
+							class="badge bg-warning text-dark">ビジネス・実用</span>
+						<p>マイ本棚登録数：76件</p>
+					</a>
+					<a href="/book/review/detail-list" class="list-group-item">
+						<h5 class="mb-1">5位：エッセンシャル思考</h5>
+						<p class="mb-1 text-muted">著者：グレッグ・マキューン</p><span
+							class="badge bg-warning text-dark">ビジネス・実用</span>
+						<p>マイ本棚登録数：74件</p>
+					</a>
+					<a href="/book/review/detail-list" class="list-group-item">
+						<h5 class="mb-1">6位：7つの習慣</h5>
+						<p class="mb-1 text-muted">著者：スティーブン・R・コヴィー</p><span
+							class="badge bg-warning text-dark">ビジネス・実用</span>
+						<p>マイ本棚登録数：72件</p>
+					</a>
+					<a href="/book/review/detail-list" class="list-group-item">
+						<h5 class="mb-1">7位：アウトプット大全</h5>
+						<p class="mb-1 text-muted">著者：樺沢紫苑</p><span class="badge bg-warning text-dark">ビジネス・実用</span>
+						<p>マイ本棚登録数：68件</p>
+					</a>
+					<a href="/book/review/detail-list" class="list-group-item">
+						<h5 class="mb-1">8位：影響力の武器</h5>
+						<p class="mb-1 text-muted">著者：ロバート・チャルディーニ</p><span
+							class="badge bg-warning text-dark">ビジネス・実用</span>
+						<p>マイ本棚登録数：65件</p>
+					</a>
+					<a href="/book/review/detail-list" class="list-group-item">
+						<h5 class="mb-1">9位：ゼロ秒思考</h5>
+						<p class="mb-1 text-muted">著者：赤羽雄二</p><span class="badge bg-warning text-dark">ビジネス・実用</span>
+						<p>マイ本棚登録数：63件</p>
+					</a>
+					<a href="/book/review/detail-list" class="list-group-item">
+						<h5 class="mb-1">10位：イシューからはじめよ</h5>
+						<p class="mb-1 text-muted">著者：安宅和人</p><span class="badge bg-warning text-dark">ビジネス・実用</span>
+						<p>マイ本棚登録数：60件</p>
+					</a>
+				</div>
+			</div>
 
-        <!-- ▼ その他 ▼ -->
-        <div class="tab-pane fade" id="other">
-            <div class="list-group mb-4">
-                <div class="list-group-item"><h5 class="mb-1">1位：現代アート入門</h5><p class="mb-1 text-muted">著者：不明</p><span class="badge bg-secondary">その他</span><p>マイ本棚登録数：78件</p></div>
-                <div class="list-group-item"><h5 class="mb-1">2位：科学の基本</h5><p class="mb-1 text-muted">著者：不明</p><span class="badge bg-secondary">その他</span><p>マイ本棚登録数：70件</p></div>
-                <div class="list-group-item"><h5 class="mb-1">3位：写真の教科書</h5><p class="mb-1 text-muted">著者：不明</p><span class="badge bg-secondary">その他</span><p>マイ本棚登録数：68件</p></div>
+			<!-- ▼ その他 ▼ -->
+			<div class="tab-pane fade" id="other">
+				<div class="list-group mb-4">
+					<a href="/book/review/detail-list" class="list-group-item rank-1">
+						<h5 class="mb-1"><i class="bi bi-trophy-fill text-warning"></i>1位：現代アート入門</h5>
+						<p class="mb-1 text-muted">著者：不明</p><span class="badge bg-secondary">その他</span>
+						<p>マイ本棚登録数：78件</p>
+					</a>
+					<a href="/book/review/detail-list" class="list-group-item rank-2">
+						<h5 class="mb-1"><i class="bi bi-trophy-fill text-secondary"></i>2位：科学の基本</h5>
+						<p class="mb-1 text-muted">著者：不明</p><span class="badge bg-secondary">その他</span>
+						<p>マイ本棚登録数：70件</p>
+					</a>
+					<a href="/book/review/detail-list" class="list-group-item rank-3">
+						<h5 class="mb-1"><i class="bi bi-trophy-fill" style="color: #cd7f32;"></i>3位：写真の教科書</h5>
+						<p class="mb-1 text-muted">著者：不明</p><span class="badge bg-secondary">その他</span>
+						<p>マイ本棚登録数：68件</p>
+					</a>
 
-                <!-- ダミー -->
-                <div class="list-group-item"><h5 class="mb-1">4位：古代文明入門</h5><p class="mb-1 text-muted">著者：不明</p><span class="badge bg-secondary">その他</span><p>マイ本棚登録数：65件</p></div>
-                <div class="list-group-item"><h5 class="mb-1">5位：料理の科学</h5><p class="mb-1 text-muted">著者：不明</p><span class="badge bg-secondary">その他</span><p>マイ本棚登録数：63件</p></div>
-                <div class="list-group-item"><h5 class="mb-1">6位：ヨガの基本</h5><p class="mb-1 text-muted">著者：不明</p><span class="badge bg-secondary">その他</span><p>マイ本棚登録数：61件</p></div>
-                <div class="list-group-item"><h5 class="mb-1">7位：自然観察図鑑</h5><p class="mb-1 text-muted">著者：不明</p><span class="badge bg-secondary">その他</span><p>マイ本棚登録数：58件</p></div>
-                <div class="list-group-item"><h5 class="mb-1">8位：世界の植物100</h5><p class="mb-1 text-muted">著者：不明</p><span class="badge bg-secondary">その他</span><p>マイ本棚登録数：57件</p></div>
-                <div class="list-group-item"><h5 class="mb-1">9位：歴史図解入門</h5><p class="mb-1 text-muted">著者：不明</p><span class="badge bg-secondary">その他</span><p>マイ本棚登録数：55件</p></div>
-                <div class="list-group-item"><h5 class="mb-1">10位：はじめての哲学</h5><p class="mb-1 text-muted">著者：不明</p><span class="badge bg-secondary">その他</span><p>マイ本棚登録数：53件</p></div>
-            </div>
-        </div>
+					<!-- ダミー -->
+					<a href="/book/review/detail-list" class="list-group-item">
+						<h5 class="mb-1">4位：古代文明入門</h5>
+						<p class="mb-1 text-muted">著者：不明</p><span class="badge bg-secondary">その他</span>
+						<p>マイ本棚登録数：65件</p>
+					</a>
+					<a href="/book/review/detail-list" class="list-group-item">
+						<h5 class="mb-1">5位：料理の科学</h5>
+						<p class="mb-1 text-muted">著者：不明</p><span class="badge bg-secondary">その他</span>
+						<p>マイ本棚登録数：63件</p>
+					</a>
+					<a href="/book/review/detail-list" class="list-group-item">
+						<h5 class="mb-1">6位：ヨガの基本</h5>
+						<p class="mb-1 text-muted">著者：不明</p><span class="badge bg-secondary">その他</span>
+						<p>マイ本棚登録数：61件</p>
+					</a>
+					<a href="/book/review/detail-list" class="list-group-item">
+						<h5 class="mb-1">7位：自然観察図鑑</h5>
+						<p class="mb-1 text-muted">著者：不明</p><span class="badge bg-secondary">その他</span>
+						<p>マイ本棚登録数：58件</p>
+					</a>
+					<a href="/book/review/detail-list" class="list-group-item">
+						<h5 class="mb-1">8位：世界の植物100</h5>
+						<p class="mb-1 text-muted">著者：不明</p><span class="badge bg-secondary">その他</span>
+						<p>マイ本棚登録数：57件</p>
+					</a>
+					<a href="/book/review/detail-list" class="list-group-item">
+						<h5 class="mb-1">9位：歴史図解入門</h5>
+						<p class="mb-1 text-muted">著者：不明</p><span class="badge bg-secondary">その他</span>
+						<p>マイ本棚登録数：55件</p>
+					</a>
+					<a href="/book/review/detail-list" class="list-group-item">
+						<h5 class="mb-1">10位：はじめての哲学</h5>
+						<p class="mb-1 text-muted">著者：不明</p><span class="badge bg-secondary">その他</span>
+						<p>マイ本棚登録数：53件</p>
+					</a>
+				</div>
+			</div>
 
-    </div>
+		</div>
 
-    <!-- ▼ トップページへ戻る ▼ -->
-    <div class="text-center mt-5">
-        <a href="/" class="btn btn-secondary">トップページへ戻る</a>
-    </div>
-</div>
+		<!-- ▼ トップページへ戻る ▼ -->
+		<div class="text-center mt-5">
+			<a href="/home" class="btn btn-secondary">トップページへ戻る</a>
+		</div>
+	</div>
 
-<!-- ▼ Footer ▼ -->
-<footer class="mt-5 py-3 bg-dark text-center text-white">
-    © 読書記録管理システム
-</footer>
+	<!-- ▼ Footer ▼ -->
+	<footer class="mt-5 py-3 bg-dark text-center text-white">
+		© 読書記録管理システム
+	</footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

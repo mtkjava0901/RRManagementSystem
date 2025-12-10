@@ -22,7 +22,7 @@
         <!-- ▲▲ ステータスメッセージ表示エリア ▲▲ -->
 
         <!-- Login Form -->
-        <form>
+        <form action="/login" method="post">
             <div class="mb-3">
                 <label for="loginId" class="form-label">ログインID</label>
                 <input type="text" class="form-control" id="loginId" placeholder="ログインIDを入力">
@@ -37,7 +37,9 @@
                 <small><a href="/register">会員登録はこちら</a></small>
             </div>
 
-            <button type="submit" class="btn btn-primary w-100">ログイン</button>
+			<a href="/home" class="btn btn-primary w-100">ログイン</a>
+
+            <!--<button type="submit" class="btn btn-primary w-100">ログイン</button>-->
         </form>
     </div>
 </div>
