@@ -34,12 +34,12 @@ public interface BookMapper {
 	 **********/
 
 	// 検索件数を取得
-	int countBySearchConditions(
+	int countBySearch(
 			@Param("keyword") String keyword,
 			@Param("genreId") Integer genreId);
 
 	// 検索結果を取得
-	List<Book> findBySearchConditions(
+	List<Book> findBySearch(
 			@Param("keyword") String keyword,
 			@Param("genreId") Integer genreId,
 			@Param("sort") String sort,

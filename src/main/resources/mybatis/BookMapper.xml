@@ -23,7 +23,7 @@
 	</resultMap>
 
 	<!-- 検索 + ソート + ページング -->
-	<select id="search" resultMap="BookResultMap">
+	<select id="findBySearch" parameterType="map" resultMap="BookResultMap">
 		SELECT
 		b.id,
 		b.title,
@@ -77,7 +77,7 @@
 
 
 	<!-- ★ 件数カウント（ページング用） -->
-	<select id="countSearch" resultType="int">
+	<select id="countBySearch" resultType="int">
 		SELECT COUNT(*)
 		FROM books b
 		WHERE b.status = 'ACT'
