@@ -1,4 +1,4 @@
-package com.example.app.controller;
+package com.example.app.controller.Login;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
