@@ -1,7 +1,7 @@
 package com.example.app.domain;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 
 import lombok.Data;
 
@@ -9,7 +9,7 @@ import lombok.Data;
 public class UserLoginForm {
 	
 	@NotBlank(message="{user.loginId.NotBlank}")
-	@Size(max = 30, message="{user.loginId.Size}")
+	@Email
 	private String loginId;
 	
 	@NotBlank(message="{user.loginPass.NotBlank}")

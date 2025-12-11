@@ -4,8 +4,8 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link th:href="@{css/bootstrap.min.css}" rel="stylesheet">
-	<link th:href="@{css/style.css}" rel="stylesheet">
+	<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+	<link th:href="@{/css/style.css}" rel="stylesheet">
 	<title>ログイン</title>
 </head>
 
@@ -39,7 +39,7 @@
 
 				<!-- Login Form -->
 				<div class="mb-3">
-					<input type="text" th:field="*{loginId}" class="form-control" placeholder="ログインIDを入力">
+					<input type="text" th:field="*{loginId}" class="form-control" placeholder="Emailアドレスを入力">
 				</div>
 
 				<div class="mb-3">
