@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.app.mapper.UserMapper">
+
+	<!-- 結合SQL文 -->
+	<sql id="userSelect">
+		SELECT
+		user.id,
+		user.login_id,
+		user.login_pass,
+		user.name,
+		user.registered_at,
+		user.updated_at,
+		user.status
+	</sql>
+	
+	<!-- resultMap定義 -->
+	<resultMap id="userMap" type="User" autoMapping="true" />
+	
+	<!-- ユーザー一覧 -->
+	<select id="selectAll" resultMap="userMap">
+		<include refid="userSelect" />
+		FROM users AS user
+		WHERE user.status = 'ACT'
+		ORDER BY user.id ASC
+	</select>
+	
+	<!-- ユーザーID取得 -->
+	<select id="selectById" resultMap="userMap">
+		<include refid="userSelect" />
+		FROM users AS user
+		WHERE user.id = #{id}
+	</select>
+	
+	<!-- ユーザー追加 -->
+	<insert id="insert" parameterType="User">
+		INSERT INTO users
+		(login_id, login_pass, name)
+		VALUES
+		(#{loginId}, #{loginPass}, #{name})
+	</insert>
+	
+	<!-- ユーザー編集 -->
+	<update id="update" parameterType="User">
+		UPDATE users
+		SET
+		login_id = #{loginId},
+		login_pass = #{loginPass},
+		name = #{name},
+		updated_at = CURRENT_TIMESTAMP
+		WHERE id = #{id}
+	</update>
+	
+	<!-- ユーザー論理削除 -->
+	<update id="delete" parameterType="User">
+		UPDATE users
+		SET status = 'DEL',
+		updated_at = CURRENT_TIMESTAMP
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 同じログインID(Email)が存在するか判定 -->
+	<select id="countByLoginId" resultType="int">
+		SELECT COUNT (*)
+		FROM users AS user
+		WHERE login_id = #{loginId}
+		AND status = 'ACT'
+	</select>	
+	
+	<!-- DBのUserを1件取得、パスワードが一致するかチェック -->
+	<select id="findByLoginId" resultMap="userMap">
+		<include refid="userSelect" />
+		FROM users AS user
+		WHERE login_id = #{loginId}
+		AND status = 'ACT'
+		LIMIT 1
+	</select>
+
+</mapper>
