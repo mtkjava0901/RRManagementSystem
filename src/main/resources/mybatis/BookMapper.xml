@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.app.mapper.BookMapper">
+
+	<!-- Book+BookGenre JOIN resultMap -->
+	<resultMap id="BookResultMap" type="Book">
+		<id property="id" column="id" />
+		<result property="title" column="title" />
+		<result property="author" column="author" />
+		<result property="publisher" column="publisher" />
+		<result property="publisherAt" column="publisher_at" />
+		<result property="createdAt" column="created_at" />
+		<result property="updatedAt" column="updated_at" />
+		<result property="status" column="status" />
+		<result property="manual" column="manual" />
+
+		<!-- JOIN側をネスト -->
+		<association property="bookGenre" javaType="BookGenre">
+			<id property="id" column="genre_id" />
+			<result property="name" column="genre_name" />
+		</association>
+
+	</resultMap>
+
+	<!-- 検索 + ソート + ページング -->
+	<select id="search" resultMap="BookResultMap">
+		SELECT
+		b.id,
+		b.title,
+		b.author,
+		b.publisher,
+		b.publisher_at,
+		b.created_at,
+		b.updated_at,
+		b.status,
+		b.manual,
+		g.id AS genre_id,
+		g.name AS genre_name
+		FROM books b
+		LEFT JOIN book_genres g ON b.genre = g.id
+		WHERE
+		b.status = 'ACT'
+
+		<!-- 検索キーワード（タイトル OR 著者） -->
+		<if test="keyword != null and keyword != ''">
+			AND (b.title LIKE CONCAT('%', #{keyword}, '%')
+			OR b.author LIKE CONCAT('%', #{keyword}, '%'))
+		</if>
+
+		<!-- ジャンル絞り込み（0 の場合 = 全て） -->
+		<if test="genreId != null and genreId != 0">
+			AND b.genre = #{genreId}
+		</if>
+
+		<!-- ソート（動的） -->
+		<choose>
+			<when test="sort == 'title'">
+				ORDER BY b.title
+			</when>
+			<when test="sort == 'author'">
+				ORDER BY b.author
+			</when>
+			<when test="sort == 'publisher_at'">
+				ORDER BY b.publisher_at
+			</when>
+			<when test="sort == 'genre'">
+				ORDER BY g.name
+			</when>
+			<otherwise>
+				ORDER BY b.id DESC
+			</otherwise>
+		</choose>
+
+		<!-- ページング -->
+		LIMIT #{limit} OFFSET #{offset}
+	</select>
+
+
+	<!-- ★ 件数カウント（ページング用） -->
+	<select id="countSearch" resultType="int">
+		SELECT COUNT(*)
+		FROM books b
+		WHERE b.status = 'ACT'
+
+		<if test="keyword != null and keyword != ''">
+			AND (b.title LIKE CONCAT('%', #{keyword}, '%')
+			OR b.author LIKE CONCAT('%', #{keyword}, '%'))
+		</if>
+
+		<if test="genreId != null and genreId != 0">
+			AND b.genre = #{genreId}
+		</if>
+	</select>
+
+</mapper>
