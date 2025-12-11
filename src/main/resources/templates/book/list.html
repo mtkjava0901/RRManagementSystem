@@ -71,191 +71,195 @@
 		<section class="favorite-section mb-4">
 			<h2>マイ本棚</h2>
 
+			<p class="text-muted mb-4">
+				あなたが本棚へ追加した書籍データを見ることができます。マイデータの編集は書籍を選択して下さい。
+			</p>
+
 			<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-3">
 
 				<!-- ▼ ダミーデータ10件 ▼ -->
 
 				<div class="col">
-						<div class="book-card p-3 clickable-card" data-href="/book/detail">
-							<div class="book-title">風の谷の物語</div>
-							<div class="book-meta">著者：山田 太郎</div>
-							<div class="book-meta">出版社：青空出版</div>
-							<div class="book-meta">発行日：2021-03-10</div>
-							<div class="badge bg-primary">小説</div>
+					<div class="book-card p-3 clickable-card" data-href="/book/detail">
+						<div class="book-title">風の谷の物語</div>
+						<div class="book-meta">著者：山田 太郎</div>
+						<div class="book-meta">出版社：青空出版</div>
+						<div class="book-meta">発行日：2021-03-10</div>
+						<div class="badge bg-primary">小説</div>
 
-							<a href="/book/review/add" class="btn btn-primary btn-sm w-100 mt-3">
-								この本のレビューを書く
-							</a>
+						<a href="/book/review/add" class="btn btn-primary btn-sm w-100 mt-3">
+							この本のレビューを書く
+						</a>
 
-							<form action="/book/101/remove" method="post" class="mt-2">
-								<button type="submit" class="btn btn-outline-danger btn-sm w-100">
-									本棚から外す
-								</button>
-							</form>
+						<form action="/book/101/remove" method="post" class="mt-2">
+							<button type="submit" class="btn btn-outline-danger btn-sm w-100">
+								本棚から外す
+							</button>
+						</form>
 
-						</div>
+					</div>
 				</div>
 
 				<div class="col">
 					<div class="book-card p-3 clickable-card" data-href="/book/detail">
-							<div class="book-title">都市を歩く楽しみ</div>
-							<div class="book-meta">著者：佐藤 花子</div>
-							<div class="book-meta">出版社：未来社</div>
-							<div class="book-meta">発行日：2020-11-25</div>
-							<div class="badge bg-warning text-dark">ビジネス・実用</div>
-							<a href="/book/review/add" class="btn btn-primary btn-sm w-100 mt-3">
-								この本のレビューを書く
-							</a>
-							<form action="/book/101/remove" method="post" class="mt-2">
-								<button type="submit" class="btn btn-outline-danger btn-sm w-100">
-									本棚から外す
-								</button>
-							</form>
-						</div>
+						<div class="book-title">都市を歩く楽しみ</div>
+						<div class="book-meta">著者：佐藤 花子</div>
+						<div class="book-meta">出版社：未来社</div>
+						<div class="book-meta">発行日：2020-11-25</div>
+						<div class="badge bg-warning text-dark">ビジネス・実用</div>
+						<a href="/book/review/add" class="btn btn-primary btn-sm w-100 mt-3">
+							この本のレビューを書く
+						</a>
+						<form action="/book/101/remove" method="post" class="mt-2">
+							<button type="submit" class="btn btn-outline-danger btn-sm w-100">
+								本棚から外す
+							</button>
+						</form>
+					</div>
 				</div>
 
 				<div class="col">
 					<div class="book-card p-3 clickable-card" data-href="/book/detail">
-							<div class="book-title">魔法使いの日常</div>
-							<div class="book-meta">著者：黒崎 レイ</div>
-							<div class="book-meta">出版社：スター出版</div>
-							<div class="book-meta">発行日：2019-07-15</div>
-							<div class="badge bg-primary">小説</div>
-							<a href="/book/review/add" class="btn btn-primary btn-sm w-100 mt-3">
-								この本のレビューを書く
-							</a>
-							<form action="/book/101/remove" method="post" class="mt-2">
-								<button type="submit" class="btn btn-outline-danger btn-sm w-100">
-									本棚から外す
-								</button>
-							</form>
-						</div>
+						<div class="book-title">魔法使いの日常</div>
+						<div class="book-meta">著者：黒崎 レイ</div>
+						<div class="book-meta">出版社：スター出版</div>
+						<div class="book-meta">発行日：2019-07-15</div>
+						<div class="badge bg-primary">小説</div>
+						<a href="/book/review/add" class="btn btn-primary btn-sm w-100 mt-3">
+							この本のレビューを書く
+						</a>
+						<form action="/book/101/remove" method="post" class="mt-2">
+							<button type="submit" class="btn btn-outline-danger btn-sm w-100">
+								本棚から外す
+							</button>
+						</form>
+					</div>
 				</div>
 
 				<div class="col">
 					<div class="book-card p-3 clickable-card" data-href="/book/detail">
-							<div class="book-title">マンガでわかる世界史</div>
-							<div class="book-meta">著者：グローバル太一</div>
-							<div class="book-meta">出版社：学研堂</div>
-							<div class="book-meta">発行日：2022-04-01</div>
-							<div class="badge bg-success">漫画</div>
-							<a href="/book/review/add" class="btn btn-primary btn-sm w-100 mt-3">
-								この本のレビューを書く
-							</a>
-							<form action="/book/101/remove" method="post" class="mt-2">
-								<button type="submit" class="btn btn-outline-danger btn-sm w-100">
-									本棚から外す
-								</button>
-							</form>
-						</div>
+						<div class="book-title">マンガでわかる世界史</div>
+						<div class="book-meta">著者：グローバル太一</div>
+						<div class="book-meta">出版社：学研堂</div>
+						<div class="book-meta">発行日：2022-04-01</div>
+						<div class="badge bg-success">漫画</div>
+						<a href="/book/review/add" class="btn btn-primary btn-sm w-100 mt-3">
+							この本のレビューを書く
+						</a>
+						<form action="/book/101/remove" method="post" class="mt-2">
+							<button type="submit" class="btn btn-outline-danger btn-sm w-100">
+								本棚から外す
+							</button>
+						</form>
+					</div>
 				</div>
 
 				<div class="col">
 					<div class="book-card p-3 clickable-card" data-href="/book/detail">
-							<div class="book-title">ゼロから学ぶ経済学</div>
-							<div class="book-meta">著者：小林 政治</div>
-							<div class="book-meta">出版社：知識社</div>
-							<div class="book-meta">発行日：2018-09-01</div>
-							<div class="badge bg-warning text-dark">ビジネス・実用</div>
-							<a href="/book/review/add" class="btn btn-primary btn-sm w-100 mt-3">
-								この本のレビューを書く
-							</a>
-							<form action="/book/101/remove" method="post" class="mt-2">
-								<button type="submit" class="btn btn-outline-danger btn-sm w-100">
-									本棚から外す
-								</button>
-							</form>
-						</div>
+						<div class="book-title">ゼロから学ぶ経済学</div>
+						<div class="book-meta">著者：小林 政治</div>
+						<div class="book-meta">出版社：知識社</div>
+						<div class="book-meta">発行日：2018-09-01</div>
+						<div class="badge bg-warning text-dark">ビジネス・実用</div>
+						<a href="/book/review/add" class="btn btn-primary btn-sm w-100 mt-3">
+							この本のレビューを書く
+						</a>
+						<form action="/book/101/remove" method="post" class="mt-2">
+							<button type="submit" class="btn btn-outline-danger btn-sm w-100">
+								本棚から外す
+							</button>
+						</form>
+					</div>
 				</div>
 
 				<div class="col">
 					<div class="book-card p-3 clickable-card" data-href="/book/detail">
-							<div class="book-title">宇宙の不思議図鑑</div>
-							<div class="book-meta">著者：川口 健太</div>
-							<div class="book-meta">出版社：サイエンス社</div>
-							<div class="book-meta">発行日：2023-02-14</div>
-							<div class="badge bg-secondary">その他</div>
-							<a href="/book/review/add" class="btn btn-primary btn-sm w-100 mt-3">
-								この本のレビューを書く
-							</a>
-							<form action="/book/101/remove" method="post" class="mt-2">
-								<button type="submit" class="btn btn-outline-danger btn-sm w-100">
-									本棚から外す
-								</button>
-							</form>
-						</div>
+						<div class="book-title">宇宙の不思議図鑑</div>
+						<div class="book-meta">著者：川口 健太</div>
+						<div class="book-meta">出版社：サイエンス社</div>
+						<div class="book-meta">発行日：2023-02-14</div>
+						<div class="badge bg-secondary">その他</div>
+						<a href="/book/review/add" class="btn btn-primary btn-sm w-100 mt-3">
+							この本のレビューを書く
+						</a>
+						<form action="/book/101/remove" method="post" class="mt-2">
+							<button type="submit" class="btn btn-outline-danger btn-sm w-100">
+								本棚から外す
+							</button>
+						</form>
+					</div>
 				</div>
 
 				<div class="col">
 					<div class="book-card p-3 clickable-card" data-href="/book/detail">
-							<div class="book-title">異世界の酒場</div>
-							<div class="book-meta">著者：ライト ノベル</div>
-							<div class="book-meta">出版社：ファンタジア出版</div>
-							<div class="book-meta">発行日：2021-08-20</div>
-							<div class="badge bg-primary">小説</div>
-							<a href="/book/review/add" class="btn btn-primary btn-sm w-100 mt-3">
-								この本のレビューを書く
-							</a>
-							<form action="/book/101/remove" method="post" class="mt-2">
-								<button type="submit" class="btn btn-outline-danger btn-sm w-100">
-									本棚から外す
-								</button>
-							</form>
-						</div>
+						<div class="book-title">異世界の酒場</div>
+						<div class="book-meta">著者：ライト ノベル</div>
+						<div class="book-meta">出版社：ファンタジア出版</div>
+						<div class="book-meta">発行日：2021-08-20</div>
+						<div class="badge bg-primary">小説</div>
+						<a href="/book/review/add" class="btn btn-primary btn-sm w-100 mt-3">
+							この本のレビューを書く
+						</a>
+						<form action="/book/101/remove" method="post" class="mt-2">
+							<button type="submit" class="btn btn-outline-danger btn-sm w-100">
+								本棚から外す
+							</button>
+						</form>
+					</div>
 				</div>
 
 				<div class="col">
 					<div class="book-card p-3 clickable-card" data-href="/book/detail">
-							<div class="book-title">やさしいプログラミング入門</div>
-							<div class="book-meta">著者：IT 未来</div>
-							<div class="book-meta">出版社：テック出版</div>
-							<div class="book-meta">発行日：2019-12-05</div>
-							<div class="badge bg-warning text-dark">ビジネス・実用</div>
-							<a href="/book/review/add" class="btn btn-primary btn-sm w-100 mt-3">
-								この本のレビューを書く
-							</a>
-							<form action="/book/101/remove" method="post" class="mt-2">
-								<button type="submit" class="btn btn-outline-danger btn-sm w-100">
-									本棚から外す
-								</button>
-							</form>
-						</div>
+						<div class="book-title">やさしいプログラミング入門</div>
+						<div class="book-meta">著者：IT 未来</div>
+						<div class="book-meta">出版社：テック出版</div>
+						<div class="book-meta">発行日：2019-12-05</div>
+						<div class="badge bg-warning text-dark">ビジネス・実用</div>
+						<a href="/book/review/add" class="btn btn-primary btn-sm w-100 mt-3">
+							この本のレビューを書く
+						</a>
+						<form action="/book/101/remove" method="post" class="mt-2">
+							<button type="submit" class="btn btn-outline-danger btn-sm w-100">
+								本棚から外す
+							</button>
+						</form>
+					</div>
 				</div>
 
 				<div class="col">
 					<div class="book-card p-3 clickable-card" data-href="/book/detail">
-							<div class="book-title">四季を味わう料理本</div>
-							<div class="book-meta">著者：北川 美味</div>
-							<div class="book-meta">出版社：キッチン出版</div>
-							<div class="book-meta">発行日：2020-06-18</div>
-							<div class="badge bg-secondary">その他</div>
-							<a href="/book/review/add" class="btn btn-primary btn-sm w-100 mt-3">
-								この本のレビューを書く
-							</a>
-							<form action="/book/101/remove" method="post" class="mt-2">
-								<button type="submit" class="btn btn-outline-danger btn-sm w-100">
-									本棚から外す
-								</button>
-							</form>
-						</div>
+						<div class="book-title">四季を味わう料理本</div>
+						<div class="book-meta">著者：北川 美味</div>
+						<div class="book-meta">出版社：キッチン出版</div>
+						<div class="book-meta">発行日：2020-06-18</div>
+						<div class="badge bg-secondary">その他</div>
+						<a href="/book/review/add" class="btn btn-primary btn-sm w-100 mt-3">
+							この本のレビューを書く
+						</a>
+						<form action="/book/101/remove" method="post" class="mt-2">
+							<button type="submit" class="btn btn-outline-danger btn-sm w-100">
+								本棚から外す
+							</button>
+						</form>
+					</div>
 				</div>
 
 				<div class="col">
 					<div class="book-card p-3 clickable-card" data-href="/book/detail">
-							<div class="book-title">心を整える習慣術</div>
-							<div class="book-meta">著者：松本 心</div>
-							<div class="book-meta">出版社：メンタル出版</div>
-							<div class="book-meta">発行日：2022-09-08</div>
-							<div class="badge bg-warning text-dark">ビジネス・実用</div>
-							<a href="/book/review/add" class="btn btn-primary btn-sm w-100 mt-3">
-								この本のレビューを書く
-							</a>
-							<form action="/book/101/remove" method="post" class="mt-2">
-								<button type="submit" class="btn btn-outline-danger btn-sm w-100">
-									本棚から外す
-								</button>
-							</form>
-						</div>
+						<div class="book-title">心を整える習慣術</div>
+						<div class="book-meta">著者：松本 心</div>
+						<div class="book-meta">出版社：メンタル出版</div>
+						<div class="book-meta">発行日：2022-09-08</div>
+						<div class="badge bg-warning text-dark">ビジネス・実用</div>
+						<a href="/book/review/add" class="btn btn-primary btn-sm w-100 mt-3">
+							この本のレビューを書く
+						</a>
+						<form action="/book/101/remove" method="post" class="mt-2">
+							<button type="submit" class="btn btn-outline-danger btn-sm w-100">
+								本棚から外す
+							</button>
+						</form>
+					</div>
 				</div>
 
 			</div>
@@ -286,20 +290,20 @@
 
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 	<script>
-	document.addEventListener("DOMContentLoaded", () => {
-	    document.querySelectorAll('.clickable-card').forEach(card => {
-	        card.addEventListener('click', (e) => {
+		document.addEventListener("DOMContentLoaded", () => {
+			document.querySelectorAll('.clickable-card').forEach(card => {
+				card.addEventListener('click', (e) => {
 
-	            // 内部のボタン・リンクが押された時はカード遷移を無効化
-	            if (e.target.closest('a, button')) return;
+					// 内部のボタン・リンクが押された時はカード遷移を無効化
+					if (e.target.closest('a, button')) return;
 
-	            const url = card.dataset.href;
-	            if (url) {
-	                window.location.href = url;
-	            }
-	        });
-	    });
-	});
+					const url = card.dataset.href;
+					if (url) {
+						window.location.href = url;
+					}
+				});
+			});
+		});
 	</script>
 </body>
 
