@@ -1,4 +1,4 @@
-package com.example.app.controller.Login;
+package com.example.app.controller;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -33,7 +33,7 @@ public class AdminLoginController {
 			model.addAttribute("loginForm", new AdminLoginForm());
 		}
 		
-		// 生徒セッションが存在する場合は破棄して管理者ログインページへ遷移(未)
+		// ユーザーセッションが存在する場合は破棄して管理者ログインページへ遷移(未)
 		if (session.getAttribute("user") != null) {
 			session.removeAttribute("user");
 		}
@@ -66,7 +66,7 @@ public class AdminLoginController {
 	}
 	
 	@GetMapping("/admin/logout")
-	public String logout(RedirectAttributes rd) {
+	public String adminLogout(RedirectAttributes rd) {
 		// セッションを破棄し、トップページへ遷移
 		session.invalidate();
 		rd.addFlashAttribute("loginMessage", "ログアウトしました。");

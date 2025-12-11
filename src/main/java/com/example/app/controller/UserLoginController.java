@@ -1,4 +1,4 @@
-package com.example.app.controller.Login;
+package com.example.app.controller;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -63,7 +63,7 @@ public class UserLoginController {
 	
 	// ログアウト
 	@GetMapping("/logout")
-	public String logout(RedirectAttributes rd) {
+	public String userLogout(RedirectAttributes rd) {
 		// セッションを破棄してトップページへ遷移
 		session.invalidate();
 		rd.addFlashAttribute("loginMessage", "ログアウトしました。");
