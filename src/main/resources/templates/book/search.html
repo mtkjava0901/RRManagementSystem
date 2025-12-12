@@ -119,7 +119,7 @@
 					<div class="text-muted small mb-2">ジャンル：
 						<span th:text="${book.bookGenre.name}"></span>
 					</div>
-					<a href="#" class="btn btn-outline-primary btn-sm">本棚に追加</a>
+					<a th:href="@{/book/add-booklist(bookId=${book.id})}" class="btn btn-outline-primary btn-sm">本棚に追加</a>
 				</div>
 
 

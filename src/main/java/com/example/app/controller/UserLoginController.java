@@ -58,6 +58,7 @@ public class UserLoginController {
 		// 成功したら逆側のセッションを破棄
 		session.removeAttribute("admin");
 		session.setAttribute("user", user);
+		session.setAttribute("loginUserId", user.getId());
 		return "redirect:/home";
 	}
 	

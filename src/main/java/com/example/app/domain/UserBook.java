@@ -25,7 +25,9 @@ public class UserBook {
   
   private LocalDateTime updatedAt; // 更新一時
   
-  private Boolean isDeleted;     // 0 = false(消してない=本棚に存在), 1 = true(消した=本棚に存在していない)
+  private Boolean isDeleted; // 0=false(本棚に存在), 1=true(論理削除済)
+  
+  private Book book; // JOINでbook情報を持たせる場合(一応用意)
 }
 
 
