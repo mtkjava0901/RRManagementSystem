@@ -2,7 +2,6 @@ package com.example.app.service;
 
 import java.util.List;
 
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestAttributes;
@@ -48,9 +47,10 @@ public class UserBookServiceImpl implements UserBookService {
 			throw new RuntimeException("不正なアクセスです。");
 		}
 
-		int exists = mapper.exists(userId, bookId);
+		int exists = mapper.existsAll(userId, bookId);
 		if (exists > 0) {
-      throw new DuplicateKeyException("この本はすでに登録されています");
+			mapper.restore(userId, bookId);
+			return 1;
 		}
 
 		UserBook ub = new UserBook();
@@ -59,7 +59,7 @@ public class UserBookServiceImpl implements UserBookService {
 		ub.setStatus(ReadingStatus.UNSPECIFIED);
 		ub.setRating(null);
 		ub.setMemo(null);
-		
+
 		return mapper.insert(ub);
 	}
 

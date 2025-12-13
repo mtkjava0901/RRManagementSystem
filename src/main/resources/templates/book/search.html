@@ -58,6 +58,14 @@
 	<div class="container">
 
 		<h2 class="mb-4">本を探す</h2>
+		
+		<!-- ▼ エラーメッセージ ▼ -->
+		<div th:if="${errorMessage}" class="alert alert-danger"
+		     th:text="${errorMessage}"></div>
+
+		<!-- ▼ サクセスメッセージ ▼ -->
+		<div th:if="${successMessage}" class="alert alert-success"
+		     th:text="${successMessage}"></div>
 
 		<!-- ▼ 検索フォーム ▼ -->
 		<form th:action="@{/book/search}" method="get" class="mb-4">
@@ -119,7 +127,14 @@
 					<div class="text-muted small mb-2">ジャンル：
 						<span th:text="${book.bookGenre.name}"></span>
 					</div>
-					<a th:href="@{/book/add-booklist(bookId=${book.id})}" class="btn btn-outline-primary btn-sm">本棚に追加</a>
+					
+					<form th:action="@{/book/add-booklist}" method="post" class="d-inline">
+					    <input type="hidden" name="bookId" th:value="${book.id}">
+					    <button type="submit" class="btn btn-outline-primary btn-sm">
+					        本棚に追加
+					    </button>
+					</form>
+					
 				</div>
 
 

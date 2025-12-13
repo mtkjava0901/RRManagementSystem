@@ -40,6 +40,7 @@
 		LEFT JOIN book_genres g ON b.genre = g.id
 		WHERE
 		b.status = 'ACT'
+		AND b.manual = 1
 
 		<!-- 検索キーワード（タイトル OR 著者） -->
 		<if test="keyword != null and keyword != ''">
@@ -81,6 +82,7 @@
 		SELECT COUNT(*)
 		FROM books b
 		WHERE b.status = 'ACT'
+		AND b.manual = 1
 
 		<if test="keyword != null and keyword != ''">
 			AND (b.title LIKE CONCAT('%', #{keyword}, '%')

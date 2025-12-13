@@ -2,6 +2,7 @@ package com.example.app.controller;
 
 import jakarta.servlet.http.HttpSession;
 
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.app.domain.UserBook;
 import com.example.app.enums.ReadingStatus;
@@ -50,18 +52,30 @@ public class UserBookController {
 		return "book/list";
 	}
 
-	// 本棚への追加
-	@GetMapping("/add-booklist")
+	// 本棚への追加（post）
+	@PostMapping("/add-booklist")
 	public String addBookList(
-			@RequestParam("bookId") Integer bookId) {
+			@RequestParam("bookId") Integer bookId,
+			RedirectAttributes ra) {
 
-		// 未ログイン防止
 		Integer userId = getLoginUserId();
 		if (userId == null)
 			return "redirect:/login";
 
-		userBookService.add(userId, bookId);
-		return "redirect:/book/list";
+		try {
+			userBookService.add(userId, bookId);
+			ra.addFlashAttribute(
+					"successMessage",
+					"本棚に追加しました");
+			return "redirect:/book/search";
+
+		} catch (DuplicateKeyException e) {
+			ra.addFlashAttribute(
+					"errorMessage",
+					e.getMessage());
+
+			return "redirect:/book/search";
+		}
 	}
 
 	// 書籍詳細
@@ -110,17 +124,30 @@ public class UserBookController {
 	// 書籍からの削除ボタン（論理削除）
 	@PostMapping("/soft-delete")
 	public String softDelete(
-			@RequestParam("id") Integer id) {
+			@RequestParam("id") Integer id,
+			RedirectAttributes ra) {
 
 		Integer userId = getLoginUserId();
-		if (userId == null) return "redirect:/login";
-		
+		if (userId == null) {
+			ra.addFlashAttribute(
+					"errorMessage",
+					"ログイン状態が無効です。もう一度ログインしてください。");
+			return "redirect:/login";
+		}
+
 		UserBook ub = userBookService.getById(id);
-    if (ub == null || !ub.getUserId().equals(userId)) {
-        return "redirect:/book/list";
-    }
-		
+		if (ub == null || !ub.getUserId().equals(userId)) {
+			ra.addFlashAttribute(
+					"errorMessage",
+					"この本は削除できません。");
+			return "redirect:/book/list";
+		}
+
 		userBookService.softDelete(id);
+
+		ra.addFlashAttribute(
+				"successMessage",
+				"本棚から削除しました。");
 
 		return "redirect:/book/list";
 	}
@@ -131,13 +158,14 @@ public class UserBookController {
 			@RequestParam("id") Integer id) {
 
 		Integer userId = getLoginUserId();
-		if (userId == null) return "redirect:/login";
-		
+		if (userId == null)
+			return "redirect:/login";
+
 		UserBook ub = userBookService.getById(id);
-    if (ub == null || !ub.getUserId().equals(userId)) {
-        return "redirect:/book/list";
-    }
-		
+		if (ub == null || !ub.getUserId().equals(userId)) {
+			return "redirect:/book/list";
+		}
+
 		userBookService.hardDelete(id);
 
 		return "redirect:/book/list";

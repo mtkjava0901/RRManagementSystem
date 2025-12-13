@@ -8,6 +8,8 @@ import lombok.Data;
 @Data
 public class Book {
 
+	// 書籍
+
 	private Integer id; // PK
 
 	private String title; // 書籍名
@@ -26,6 +28,6 @@ public class Book {
 
 	private String status; // 状態
 
-	private Boolean manual; // 0=ユーザー追加(物理削除用) 1=管理者追加
+	private Boolean manual; // 0=ユーザー追加書籍(物理削除用) 1=管理者追加書籍
 
 }

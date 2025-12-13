@@ -2,42 +2,42 @@
 <html lang="ja" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<meta charset="UTF-8">
-	<title>マイ本棚 | 読書記録管理システム</title>
-	<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
-	<link th:href="@{/css/style.css}" rel="stylesheet">
-	<style>
-		/* 画像なしカードの強調デザイン */
-		.book-card {
-			border-radius: 10px;
-			border: 1px solid #ddd;
-			transition: 0.2s;
-			background: #fff;
-			height: 100%;
-		}
+<meta charset="UTF-8">
+<title>マイ本棚 | 読書記録管理システム</title>
+<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+<link th:href="@{/css/style.css}" rel="stylesheet">
+<style>
+/* 画像なしカードの強調デザイン */
+.book-card {
+	border-radius: 10px;
+	border: 1px solid #ddd;
+	transition: 0.2s;
+	background: #fff;
+	height: 100%;
+}
 
-		.book-card:hover {
-			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-			transform: translateY(-3px);
-		}
+.book-card:hover {
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+	transform: translateY(-3px);
+}
 
-		.book-title {
-			font-weight: bold;
-			font-size: 1.1rem;
-		}
+.book-title {
+	font-weight: bold;
+	font-size: 1.1rem;
+}
 
-		.book-meta {
-			font-size: 0.9rem;
-			color: #555;
-		}
+.book-meta {
+	font-size: 0.9rem;
+	color: #555;
+}
 
-		.favorite-section h2 {
-			font-size: 1.4rem;
-			border-left: 5px solid #0d6efd;
-			padding-left: 10px;
-			margin-bottom: 20px;
-		}
-	</style>
+.favorite-section h2 {
+	font-size: 1.4rem;
+	border-left: 5px solid #0d6efd;
+	padding-left: 10px;
+	margin-bottom: 20px;
+}
+</style>
 </head>
 
 <body class="bg-light">
@@ -54,12 +54,18 @@
 
 			<nav class="mt-3">
 				<ul class="nav justify-content-center">
-					<li class="nav-item"><a th:href="@{/home}" class="nav-link px-3 text-white">トップ</a></li>
-					<li class="nav-item"><a th:href="@{/book/search}" class="nav-link px-3 text-white">本を探す</a></li>
-					<li class="nav-item"><a th:href="@{/book/list}" class="nav-link px-3 text-white">マイ本棚</a></li>
-					<li class="nav-item"><a href="/book/recommend" class="nav-link px-3 text-white">あなたへのおすすめ</a></li>
-					<li class="nav-item"><a href="/book/review/list" class="nav-link px-3 text-white">新着レビュー</a></li>
-					<li class="nav-item"><a href="/book/ranking" class="nav-link px-3 text-white">ランキング</a></li>
+					<li class="nav-item"><a th:href="@{/home}"
+						class="nav-link px-3 text-white">トップ</a></li>
+					<li class="nav-item"><a th:href="@{/book/search}"
+						class="nav-link px-3 text-white">本を探す</a></li>
+					<li class="nav-item"><a th:href="@{/book/list}"
+						class="nav-link px-3 text-white">マイ本棚</a></li>
+					<li class="nav-item"><a href="/book/recommend"
+						class="nav-link px-3 text-white">あなたへのおすすめ</a></li>
+					<li class="nav-item"><a href="/book/review/list"
+						class="nav-link px-3 text-white">新着レビュー</a></li>
+					<li class="nav-item"><a href="/book/ranking"
+						class="nav-link px-3 text-white">ランキング</a></li>
 				</ul>
 			</nav>
 		</div>
@@ -70,10 +76,20 @@
 
 		<section class="favorite-section mb-4">
 			<h2>マイ本棚</h2>
+			
+			<!-- エラーメッセージ欄 -->
+			<div th:if="${errorMessage}"
+			     class="alert alert-danger mt-3"
+			     th:text="${errorMessage}">
+			</div>
+			
+			<!-- 削除メッセージ欄 -->
+			<div th:if="${successMessage}"
+				 class="alert alert-danger mt-3"
+				 th:text="${successMessage}">
+			 </div>
 
-			<p class="text-muted mb-4">
-				あなたが追加した本の一覧です。クリックして詳細・編集できます。
-			</p>
+			<p class="text-muted mb-4">あなたが追加した本の一覧です。クリックして詳細の確認や編集ができます。</p>
 
 			<!-- 本が1冊もない場合の表示 -->
 			<div th:if="${#lists.isEmpty(books.items)}" class="text-center my-5">
@@ -82,68 +98,65 @@
 				<p class="text-muted mb-4">本を探しに行きませんか？</p>
 
 				<a th:href="@{/book/search}" class="btn btn-primary btn-lg me-3">
-					本を探す
-				</a>
-
-				<a href="/book/recommend" class="btn btn-success btn-lg">
-					あなたへのおすすめ
-				</a>
+					本を探す </a> <a href="/book/recommend" class="btn btn-success btn-lg">
+					あなたへのおすすめ </a>
 
 			</div>
 
 
-			<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-3">
+			<!-- ▼ ループ:books.items(登録書籍がある場合のみ) ▼ -->
+			<div class="d-flex flex-wrap gap-3" th:unless="${#lists.isEmpty(books.items)}">
 
+					<div th:each="ub : ${books.items}">
 
-				<!-- ▼ ループ:books.items(登録書籍がある場合のみ) ▼ -->
-				<div th:unless="${#lists.isEmpty(books.items)}">
-
-					<div class="col" th:each="ub : ${books.items}">
-						<div class="book-card p-3 clickable-card" th:attr="data-href=@{/book/detail/{id}(id=${ub.id})}">
+						<div class="book-card p-3 clickable-card"
+							th:attr="data-href=@{/book/detail/{id}(id=${ub.id})}">
 
 							<div class="book-title" th:text="${ub.book.title}"></div>
 							<div class="book-meta" th:text="'著者: ' + ${ub.book.author}"></div>
 							<div class="book-meta" th:text="'出版社: ' + ${ub.book.publisher}"></div>
-							<div class="book-meta" th:text="'発行日: ' + ${#temporals.format(ub.book.publisherAt, 'yyyy/MM/dd')}"></div>
+							<div class="book-meta"
+								th:text="'発行日: ' + ${#temporals.format(ub.book.publisherAt, 'yyyy/MM/dd')}"></div>
 
 							<div class="badge bg-primary" th:text="${ub.book.bookGenre.name}"></div>
 
-							<a href="/book/review/add" class="btn btn-primary btn-sm w-100 mt-3">
-								この本のレビューを書く
-							</a>
+							<a href="/book/review/add"
+								class="btn btn-primary btn-sm w-100 mt-3"> この本のレビューを書く </a>
 
-							<form th:action="@{/book/soft-delete(id=${ub.id})}" method="post" class="mt-2">
-								<button type="submit" class="btn btn-outline-danger btn-sm w-100">
-									本棚から外す
-								</button>
+							<form th:action="@{/book/soft-delete(id=${ub.id})}" method="post"
+								class="mt-2">
+								<button type="submit"
+									class="btn btn-outline-danger btn-sm w-100">本棚から外す</button>
 							</form>
 
 						</div>
 					</div>
 				</div>
-				
+
 				<!-- ▼ ページネーション ▼ -->
 				<nav aria-label="Page navigation">
 					<ul class="pagination justify-content-center mt-4">
 
 						<!-- 前へ -->
-						<li class="page-item" th:classappend="${books.currentPage == 1} ? ' disabled'">
-							<a class="page-link" th:href="@{/book/list(page=${books.currentPage - 1})}">前へ</a>
-						</li>
+						<li class="page-item"
+							th:classappend="${books.currentPage == 1} ? ' disabled'"><a
+							class="page-link"
+							th:href="@{/book/list(page=${books.currentPage - 1})}">前へ</a></li>
 						<!-- ページ番号 -->
-						<li class="page-item" th:each="i : ${#numbers.sequence(1, books.totalPages)}"
-							th:classappend="${books.currentPage == i} ? ' active'">
-							<a class="page-link" th:href="@{/book/list(page=${i})}" th:text="${i}"></a>
-						</li>
+						<li class="page-item"
+							th:each="i : ${#numbers.sequence(1, books.totalPages)}"
+							th:classappend="${books.currentPage == i} ? ' active'"><a
+							class="page-link" th:href="@{/book/list(page=${i})}"
+							th:text="${i}"></a></li>
 						<!-- 次へ -->
-						<li class="page-item" th:classappend="${books.currentPage == books.totalPages} ? ' disabled'">
-							<a class="page-link" th:href="@{/book/list(page=${books.currentPage + 1})}">次へ</a>
+						<li class="page-item"
+							th:classappend="${books.currentPage == books.totalPages} ? ' disabled'">
+							<a class="page-link"
+							th:href="@{/book/list(page=${books.currentPage + 1})}">次へ</a>
 						</li>
 
-					</ul>
-				</nav>
-
-
+						<!--</ul>-->
+						<!--</nav>-->
 			</div>
 		</section>
 
@@ -156,11 +169,11 @@
 	</div>
 
 	<!-- ▼ Footer ▼ -->
-	<footer class="mt-5 py-3 bg-dark text-center text-white">
-		© 読書記録管理システム
-	</footer>
+	<footer class="mt-5 py-3 bg-dark text-center text-white"> ©
+		読書記録管理システム </footer>
 
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 	<script>
 		document.addEventListener("DOMContentLoaded", () => {
 			document.querySelectorAll('.clickable-card').forEach(card => {

@@ -47,4 +47,14 @@ public interface UserBookMapper {
 	// 重複追加回避
 	int exists(@Param("userId") Integer userId, @Param("bookId") Integer bookId);
 
+	// 倫理削除含め存在チェック
+	int existsAll(
+			@Param("userId") Integer userId,
+			@Param("bookId") Integer bookId);
+
+	// 倫理削除レコード復活(is_deleted1→0)
+	int restore(
+			@Param("userId") Integer userId,
+			@Param("bookId") Integer bookId);
+
 }

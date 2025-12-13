@@ -42,13 +42,15 @@
 		ub.*,
 		b.id AS b_id,
 		b.title AS b_title,
-		b.author AS b_author,
+		b.author AS
+		b_author,
 		b.publisher AS b_publisher,
 		b.publisher_at AS b_publisher_at,
 		b.genre AS b_genre,
 		b.status AS b_status,
 		b.manual AS b_manual
-		FROM user_books ub
+		FROM
+		user_books ub
 		LEFT JOIN books b ON ub.book_id = b.id
 		WHERE ub.id = #{id}
 		AND ub.is_deleted = 0
@@ -61,15 +63,18 @@
 		ub.*,
 		b.id AS b_id,
 		b.title AS b_title,
-		b.author AS b_author,
+		b.author AS
+		b_author,
 		b.publisher AS b_publisher,
 		b.publisher_at AS b_publisher_at,
 		b.genre AS b_genre,
 		b.status AS b_status,
 		b.manual AS b_manual
-		FROM user_books ub
+		FROM
+		user_books ub
 		LEFT JOIN books b ON ub.book_id = b.id
-		WHERE ub.user_id = #{userId}
+		WHERE ub.user_id =
+		#{userId}
 		AND ub.is_deleted = 0
 		ORDER BY
 		ub.created_at DESC
@@ -89,17 +94,36 @@
 		#{userId},
 		#{bookId},
 		#{rating},
-		#{status, typeHandler=com.example.app.typehandler.ReadingStatusTypeHandler},
+		#{status,
+		typeHandler=com.example.app.typehandler.ReadingStatusTypeHandler},
 		#{memo},
 		0
 		)
 	</insert>
 
+	<!-- 倫理削除含め存在チェック -->
+	<select id="existsAll" resultType="int">
+		SELECT COUNT(*)
+		FROM user_books
+		WHERE user_id = #{userId}
+		AND book_id = #{bookId}
+	</select>
+
+	<!-- 倫理削除レコード復活(is_deleted1→0) -->
+	<update id="restore">
+		UPDATE user_books
+		SET is_deleted = 0,
+		updated_at = CURRENT_TIMESTAMP
+		WHERE user_id = #{userId}
+		AND book_id = #{bookId}
+	</update>
+
 	<!-- 更新 -->
 	<update id="update" parameterType="UserBook">
 		UPDATE user_books
 		SET
-		rating = #{rating},
+		rating =
+		#{rating},
 		status =#{status,
 		typeHandler=com.example.app.typehandler.ReadingStatusTypeHandler},
 		memo = #{memo},
@@ -133,13 +157,15 @@
 		b.author AS b_author,
 		b.publisher AS b_publisher,
 		b.publisher_at AS b_publisher_at,
-		b.genre AS b_genre,
+		b.genre AS
+		b_genre,
 		b.status AS b_status,
 		b.manual AS b_manual
 		FROM user_books ub
 		LEFT JOIN books b ON ub.book_id = b.id
 		WHERE ub.user_id = #{userId}
-		AND ub.is_deleted = 0
+		AND
+		ub.is_deleted = 0
 
 		<if test="status != null">
 			AND ub.status = #{status}
@@ -147,7 +173,8 @@
 
 		<if test="keyword != null and keyword != ''">
 			AND (b.title LIKE CONCAT('%', #{keyword}, '%')
-			OR b.author LIKE CONCAT('%', #{keyword}, '%'))
+			OR b.author
+			LIKE CONCAT('%', #{keyword}, '%'))
 		</if>
 
 		<!-- ソート -->
@@ -173,7 +200,8 @@
 	<select id="countSearch" resultType="int">
 		SELECT COUNT(*)
 		FROM user_books ub
-		LEFT JOIN books b ON ub.book_id = b.id
+		LEFT JOIN books b ON ub.book_id =
+		b.id
 		WHERE ub.user_id = #{userId}
 		AND ub.is_deleted = 0
 
@@ -183,7 +211,8 @@
 
 		<if test="keyword != null and keyword != ''">
 			AND (b.title LIKE CONCAT('%', #{keyword}, '%')
-			OR b.author LIKE CONCAT('%', #{keyword}, '%'))
+			OR b.author
+			LIKE CONCAT('%', #{keyword}, '%'))
 		</if>
 	</select>
 
