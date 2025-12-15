@@ -4,7 +4,7 @@
 
 	<!-- resultMap定義 (UserBook+Book JOIN) -->
 	<resultMap id="UserBookResultMap" type="UserBook">
-		<id property="id" column="id" />
+		<id property="id" column="ub_id" />
 		<result property="userId" column="user_id" />
 		<result property="bookId" column="book_id" />
 		<result property="rating" column="rating" />
@@ -15,6 +15,7 @@
 		<result property="updatedAt" column="updated_at" />
 		<result property="isDeleted" column="is_deleted" />
 
+
 		<!-- Bookオブジェクト埋め込み -->
 		<association property="book" javaType="Book">
 			<id property="id" column="b_id" />
@@ -24,13 +25,12 @@
 			<result property="publisherAt" column="b_publisher_at" />
 			<result property="status" column="b_status" />
 			<result property="manual" column="b_manual" />
-
-			<!-- BookGenreオブジェクト埋め込み -->
+			
 			<association property="bookGenre" javaType="BookGenre">
-				<id property="id" column="b_genre" />
+				<id property="id" column="bg_id" />
 				<result property="name" column="bg_name" />
 			</association>
-
+			
 		</association>
 
 	</resultMap>
@@ -39,43 +39,79 @@
 	<select id="selectById" parameterType="int"
 		resultMap="UserBookResultMap">
 		SELECT
-		ub.*,
+		ub.id AS ub_id,
+		ub.user_id AS user_id,
+		ub.book_id AS
+		book_id,
+		ub.rating AS rating,
+		ub.status AS status,
+		ub.memo AS memo,
+		ub.created_at AS created_at,
+		ub.updated_at AS updated_at,
+		ub.is_deleted
+		AS is_deleted,
+
 		b.id AS b_id,
 		b.title AS b_title,
 		b.author AS
 		b_author,
-		b.publisher AS b_publisher,
+		b.publisher AS
+		b_publisher,
 		b.publisher_at AS b_publisher_at,
 		b.genre AS b_genre,
 		b.status AS b_status,
-		b.manual AS b_manual
+		b.manual AS b_manual,
+		
+		bg.id AS bg_id,
+		bg.name AS bg_name
+		
 		FROM
 		user_books ub
-		LEFT JOIN books b ON ub.book_id = b.id
+		LEFT JOIN
+		books b ON ub.book_id = b.id
+		LEFT JOIN book_genres bg ON b.genre = bg.id
 		WHERE ub.id = #{id}
 		AND ub.is_deleted = 0
 	</select>
 
 	<!-- ユーザーの本棚一覧取得 -->
-	<select id="selectByUserId" parameterType="int"
+	<select id="selectByUserId" parameterType="map"
 		resultMap="UserBookResultMap">
 		SELECT
-		ub.*,
+		ub.id AS ub_id,
+		ub.user_id AS user_id,
+		ub.book_id AS
+		book_id,
+		ub.rating AS rating,
+		ub.status AS status,
+		ub.memo AS memo,
+		ub.created_at AS created_at,
+		ub.updated_at AS updated_at,
+		ub.is_deleted
+		AS is_deleted,
+
 		b.id AS b_id,
 		b.title AS b_title,
 		b.author AS
 		b_author,
-		b.publisher AS b_publisher,
+		b.publisher AS
+		b_publisher,
 		b.publisher_at AS b_publisher_at,
 		b.genre AS b_genre,
 		b.status AS b_status,
-		b.manual AS b_manual
+		b.manual AS b_manual,
+		
+		bg.id AS bg_id,
+		bg.name AS bg_name
 		FROM
 		user_books ub
-		LEFT JOIN books b ON ub.book_id = b.id
+		LEFT JOIN
+		books b ON ub.book_id = b.id
+		LEFT JOIN book_genres bg ON b.genre = bg.id
 		WHERE ub.user_id =
 		#{userId}
-		AND ub.is_deleted = 0
+		AND
+		ub.is_deleted = 0
 		ORDER BY
 		ub.created_at DESC
 	</select>
@@ -122,8 +158,10 @@
 	<update id="update" parameterType="UserBook">
 		UPDATE user_books
 		SET
-		rating =
-		#{rating},
+		<if test="rating != null and rating &gt; 0">
+			rating =
+			#{rating},
+		</if>
 		status =#{status,
 		typeHandler=com.example.app.typehandler.ReadingStatusTypeHandler},
 		memo = #{memo},
@@ -151,23 +189,37 @@
 	<!-- 検索 + ソート + ページング -->
 	<select id="search" resultMap="UserBookResultMap">
 		SELECT
-		ub.*,
+		ub.id AS ub_id,
+		ub.user_id AS user_id,
+		ub.book_id AS book_id,
+		ub.rating AS rating,
+		ub.status AS status,
+		ub.memo AS memo,
+		ub.created_at
+		AS created_at,
+		ub.updated_at AS updated_at,
+		ub.is_deleted AS is_deleted,
+
 		b.id AS b_id,
 		b.title AS b_title,
 		b.author AS b_author,
-		b.publisher AS b_publisher,
+		b.publisher AS
+		b_publisher,
 		b.publisher_at AS b_publisher_at,
 		b.genre AS
 		b_genre,
 		b.status AS b_status,
-		b.manual AS b_manual
+		b.manual AS b_manual,
+		
+		bg.id AS bg_id,
+		bg.name AS bg_name
+		
 		FROM user_books ub
 		LEFT JOIN books b ON ub.book_id = b.id
+		LEFT JOIN book_genres bg ON b.genre = bg.id
 		WHERE ub.user_id = #{userId}
-		AND
-		ub.is_deleted = 0
+		AND ub.is_deleted = 0
 		AND b.manual = 1
-
 		<if test="status != null">
 			AND ub.status = #{status}
 		</if>
@@ -253,22 +305,38 @@
 	<select id="selectAddedBooksByUser" parameterType="int"
 		resultMap="UserBookResultMap">
 		SELECT
-		ub.*,
+		ub.id AS ub_id,
+		ub.user_id AS user_id,
+		ub.book_id AS
+		book_id,
+		ub.rating AS rating,
+		ub.status AS status,
+		ub.memo AS memo,
+		ub.created_at AS created_at,
+		ub.updated_at AS updated_at,
+		ub.is_deleted
+		AS is_deleted,
+
 		b.id AS b_id,
 		b.title AS b_title,
 		b.author AS
 		b_author,
 		b.publisher AS b_publisher,
 		b.publisher_at AS b_publisher_at,
-		b.genre AS b_genre,
+		b.genre AS
+		b_genre,
 		b.status AS b_status,
-		b.manual AS b_manual
-		FROM
-		user_books ub
+		b.manual AS b_manual,
+		
+		bg.id AS bg_id,
+		bg.name AS bg_name
+		FROM user_books ub
 		LEFT JOIN books b ON ub.book_id = b.id
+		LEFT JOIN book_genres bg ON b.genre = bg.id
 		WHERE ub.user_id =
 		#{userId}
-		AND ub.is_deleted = 0
+		AND
+		ub.is_deleted = 0
 		AND b.manual = 1
 		ORDER BY ub.created_at
 		DESC
@@ -278,22 +346,38 @@
 	<select id="selectManualBooksByUser" parameterType="int"
 		resultMap="UserBookResultMap">
 		SELECT
-		ub.*,
+		ub.id AS ub_id,
+		ub.user_id AS user_id,
+		ub.book_id AS
+		book_id,
+		ub.rating AS rating,
+		ub.status AS status,
+		ub.memo AS memo,
+		ub.created_at AS created_at,
+		ub.updated_at AS updated_at,
+		ub.is_deleted
+		AS is_deleted,
+
 		b.id AS b_id,
 		b.title AS b_title,
 		b.author AS
 		b_author,
-		b.publisher AS b_publisher,
+		b.publisher AS
+		b_publisher,
 		b.publisher_at AS b_publisher_at,
 		b.genre AS b_genre,
 		b.status AS b_status,
-		b.manual AS b_manual
-		FROM
-		user_books ub
+		b.manual AS b_manual,
+		
+		bg.id AS bg_id,
+		bg.name AS bg_name
+		FROM user_books ub
 		LEFT JOIN books b ON ub.book_id = b.id
+		LEFT JOIN book_genres bg ON b.genre = bg.id
 		WHERE ub.user_id =
 		#{userId}
-		AND ub.is_deleted = 0
+		AND
+		ub.is_deleted = 0
 		AND b.manual = 0
 		ORDER BY ub.created_at
 		DESC

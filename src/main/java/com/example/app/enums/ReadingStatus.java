@@ -1,34 +1,28 @@
 package com.example.app.enums;
 
 public enum ReadingStatus {
-	
+
 	// UserBook.statusを扱うためのクラス
-	
-	WANT_TO_READ("読みたい"),
-  UNREAD("未読"),
-  READING("読書中"),
-  READ("既読"),
-  UNSPECIFIED("未指定");
 
-  private final String label;
+	WANT_TO_READ("読みたい"), UNREAD("未読"), READING("読書中"), READ("既読"), UNSPECIFIED("未指定");
 
-  ReadingStatus(String label) {
-      this.label = label;
-  }
+	private final String label;
 
-  public String getLabel() {
-      return label;
-  }
+	ReadingStatus(String label) {
+		this.label = label;
+	}
 
-  // DB文字列から変換するユーティリティ
-  public static ReadingStatus from(String dbValue) {
-      for (ReadingStatus status : values()) {
-          if (status.label.equals(dbValue)) {
-              return status;
-          }
-      }
-      return UNSPECIFIED;
-  }
+	public String getLabel() {
+		return label;
+	}
+
+	// DB文字列から変換するユーティリティ
+	public static ReadingStatus from(String dbValue) {
+		for (ReadingStatus status : values()) {
+			if (status.label.equals(dbValue)) {
+				return status;
+			}
+		}
+		return UNSPECIFIED;
+	}
 }
-
-

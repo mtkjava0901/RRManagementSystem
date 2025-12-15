@@ -9,16 +9,15 @@
 <style>
 /* 画像なしカードの強調デザイン */
 .book-card {
-	border-radius: 10px;
-	border: 1px solid #ddd;
-	transition: 0.2s;
-	background: #fff;
-	height: 100%;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    background: #fff;
+    transition: 0.2s;
 }
 
 .book-card:hover {
-	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-	transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    transform: translateY(-3px);
 }
 
 .book-title {
@@ -143,11 +142,13 @@
 			</div>
 
 			<!-- 本棚に追加した書籍ループ -->
-			<div class="d-flex flex-wrap gap-3"
+			<div class="row"
 			     th:unless="${#lists.isEmpty(addedBooks.items)}">
 
 			    <th:block th:each="ub : ${addedBooks.items}">
-			         <div th:replace="~{book/_book-card :: bookCard(${ub})}"></div>
+			        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+			            <div th:replace="~{book/_book-card :: bookCard(${ub})}"></div>
+			        </div>
 			    </th:block>
 
 			</div>			

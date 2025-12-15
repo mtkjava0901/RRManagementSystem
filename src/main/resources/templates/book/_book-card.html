@@ -2,29 +2,41 @@
     <div class="book-card p-3 clickable-card"
          th:attr="data-href=@{/book/detail/{id}(id=${ub.id})}">
 
-        <div class="book-title" th:text="${ub.book.title}"></div>
-        <div class="book-meta" th:text="'著者: ' + ${ub.book.author}"></div>
-        <div class="book-meta" th:text="'出版社: ' + ${ub.book.publisher}"></div>
+        <!-- タイトル -->
+        <div class="book-title mb-1" th:text="${ub.book.title}"></div>
 
-        <div class="book-meta"
-             th:text="|発行日: ${ub.book.publisherAt != null
-                 ? #temporals.format(ub.book.publisherAt, 'yyyy/MM/dd')
-                 : ''}|">
+		<!-- ジャンルバッジ -->
+		<div class="mb-2">
+		<span th:text="${ub.book.bookGenre.name}"
+		      th:class="'badge me-1 mb-1 ' + 
+		                (${ub.book.bookGenre.name == '小説' ? 'bg-primary' : 
+		                  ub.book.bookGenre.name == '漫画' ? 'bg-success' :
+		                  ub.book.bookGenre.name == 'ビジネス･実用本' ? 'bg-warning text-dark' :
+		                  'bg-secondary'})">
+		</span>
+		</div>
+		<!-- 著者 -->
+		<div class="book-meta mb-1" th:text="'著者: ' + ${ub.book.author}"></div>
+        
+		<!-- 出版社 -->
+		<div class="book-meta mb-1" th:text="'出版社: ' + ${ub.book.publisher}"></div>
+        
+		<!-- 発行日 -->
+		<div class="book-meta mb-2"
+             th:text="|発行日: ${ub.book.publisherAt != null ? #temporals.format(ub.book.publisherAt, 'yyyy/MM/dd') : ''}|">
         </div>
 
-        <div class="badge bg-primary"
-             th:text="${ub.book.bookGenre.name}">
-        </div>
 
-        <a href="/book/review/add"
-           class="btn btn-primary btn-sm w-100 mt-3">
+        <!-- レビューボタン -->
+        <a href="/book/review/add" class="btn btn-sm btn-primary"
+		   style="width: auto;">
             この本のレビューを書く
         </a>
 
-        <form th:action="@{/book/remove(id=${ub.id})}"
-              method="post" class="mt-2">
+        <!-- 本棚から外すボタン -->
+        <form th:action="@{/book/remove(id=${ub.id})}" method="post" class="mt-1">
             <button type="submit"
-                    class="btn btn-outline-danger btn-sm w-100">
+                    class="btn btn-sm btn-outline-danger d-block text-start">
                 本棚から外す
             </button>
         </form>

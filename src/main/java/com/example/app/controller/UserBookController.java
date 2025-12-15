@@ -131,7 +131,7 @@ public class UserBookController {
 	@PostMapping("/update")
 	public String update(
 			@RequestParam Integer id,
-			@RequestParam Integer rating,
+			@RequestParam(required = false) Integer rating,
 			@RequestParam ReadingStatus status,
 			@RequestParam String memo) {
 
