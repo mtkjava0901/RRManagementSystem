@@ -6,14 +6,21 @@ import jakarta.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.app.domain.Book;
 import com.example.app.domain.BookGenre;
+import com.example.app.form.BookForm;
 import com.example.app.service.BookGenreService;
 import com.example.app.service.BookService;
+import com.example.app.service.UserBookService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,6 +31,7 @@ public class BookController {
 
 	private final BookService bookService;
 	private final BookGenreService bookGenreService;
+	private final UserBookService userBookService;
 	private final HttpSession session;
 
 	// ログイン中はユーザーIDを取得
@@ -34,14 +42,14 @@ public class BookController {
 	// 本を探す
 	@GetMapping("/search")
 	public String searchBook(
-			@RequestParam(value = "keyword", required = false) String keyword,
-			@RequestParam(value = "genreId", required = false, defaultValue = "0") Integer genreId,
-			@RequestParam(value = "sort", required = false, defaultValue = "id") String sort,
-			@RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
-			@RequestParam(value = "doSearch", required = false) String doSearch,
+			@RequestParam(required = false) String keyword,
+			@RequestParam(required = false, defaultValue = "0") Integer genreId,
+			@RequestParam(required = false, defaultValue = "id") String sort,
+			@RequestParam(required = false, defaultValue = "1") Integer page,
+			@RequestParam(required = false) String doSearch,
 			Model model) {
 
-		Integer userId = getLoginUserId();
+		// Integer userId = getLoginUserId();
 
 		final int PAGE_SIZE = 10;
 
@@ -103,8 +111,40 @@ public class BookController {
 
 	// 本を追加する(ユーザー登録)
 	@GetMapping("/add")
-	public String addBook() {
+	public String addBook(Model model) {
+		model.addAttribute("bookForm", new BookForm());
+		model.addAttribute("genres", bookGenreService.findAll());
 		return "book/add";
+	}
+
+	@PostMapping("/add")
+	public String addManualBook(
+			@Validated @ModelAttribute("bookForm") BookForm form,
+			BindingResult result,
+			RedirectAttributes ra,
+			Model model) {
+
+		Integer userId = getLoginUserId();
+		if (userId == null) {
+			return "redirect:/login";
+		}
+
+		if (result.hasErrors()) {
+			model.addAttribute("genres", bookGenreService.findAll());
+			return "book/add";
+		}
+
+		// 書籍を作る
+		Integer bookId = bookService.createManualBook(form);
+
+		// 作った書籍を本棚へ入れる
+		userBookService.add(userId, bookId);
+
+		ra.addFlashAttribute(
+				"successMessage",
+				"新規作成書籍を本棚に追加しました");
+
+		return "redirect:/book/search";
 	}
 
 }

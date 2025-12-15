@@ -76,89 +76,126 @@
 
 		<section class="favorite-section mb-4">
 			<h2>マイ本棚</h2>
-			
+
 			<!-- エラーメッセージ欄 -->
 			<div th:if="${errorMessage}"
 			     class="alert alert-danger mt-3"
 			     th:text="${errorMessage}">
 			</div>
-			
-			<!-- 削除メッセージ欄 -->
+
+			<!-- サクセスメッセージ欄 -->
 			<div th:if="${successMessage}"
-				 class="alert alert-danger mt-3"
+				 class="alert alert-success mt-3"
 				 th:text="${successMessage}">
 			 </div>
 
+			<!-- タブUI -->
+			<ul class="nav nav-tabs mb-4" id="bookTab" role="tablist">
+			  <li class="nav-item" role="presentation">
+			    <button class="nav-link active"
+			            id="added-tab"
+			            data-bs-toggle="tab"
+			            data-bs-target="#added"
+			            type="button"
+			            role="tab">
+			      本棚に追加した書籍
+			    </button>
+			  </li>
+			  <li class="nav-item" role="presentation">
+			    <button class="nav-link"
+			            id="manual-tab"
+			            data-bs-toggle="tab"
+			            data-bs-target="#manual"
+			            type="button"
+			            role="tab">
+			      自分で登録した書籍
+			    </button>
+			  </li>
+			</ul>
+
 			<p class="text-muted mb-4">あなたが追加した本の一覧です。クリックして詳細の確認や編集ができます。</p>
+			
+			<!-- タブコンテンツ全体の枠 -->
+			<div class="tab-content" id="bookTabContent">
+				
+			<!-- タブ1 本棚に追加した書籍 -->
+			<div class="tab-pane fade show active"
+			     id="added"
+			     role="tabpanel">
 
-			<!-- 本が1冊もない場合の表示 -->
-			<div th:if="${#lists.isEmpty(books.items)}" class="text-center my-5">
+			<!-- 本が1冊もない場合 -->
+			<div th:if="${#lists.isEmpty(addedBooks.items)
+			          and #lists.isEmpty(manualBooks)}"
+			     class="text-center my-5">
 
-				<h3 class="mb-3">まだ本を登録していません。</h3>
-				<p class="text-muted mb-4">本を探しに行きませんか？</p>
+			    <h3 class="mb-3">まだ本を登録していません。</h3>
+			    <p class="text-muted mb-4">本を探しに行きませんか？</p>
 
-				<a th:href="@{/book/search}" class="btn btn-primary btn-lg me-3">
-					本を探す </a> <a href="/book/recommend" class="btn btn-success btn-lg">
-					あなたへのおすすめ </a>
+			    <a th:href="@{/book/search}"
+			       class="btn btn-primary btn-lg me-3">
+			        本を探す
+			    </a>
 
+			    <a href="/book/recommend"
+			       class="btn btn-success btn-lg">
+			        あなたへのおすすめ
+			    </a>
 			</div>
 
+			<!-- 本棚に追加した書籍ループ -->
+			<div class="d-flex flex-wrap gap-3"
+			     th:unless="${#lists.isEmpty(addedBooks.items)}">
 
-			<!-- ▼ ループ:books.items(登録書籍がある場合のみ) ▼ -->
-			<div class="d-flex flex-wrap gap-3" th:unless="${#lists.isEmpty(books.items)}">
+			    <th:block th:each="ub : ${addedBooks.items}">
+			         <div th:replace="~{book/_book-card :: bookCard(${ub})}"></div>
+			    </th:block>
 
-					<div th:each="ub : ${books.items}">
+			</div>			
 
-						<div class="book-card p-3 clickable-card"
-							th:attr="data-href=@{/book/detail/{id}(id=${ub.id})}">
-
-							<div class="book-title" th:text="${ub.book.title}"></div>
-							<div class="book-meta" th:text="'著者: ' + ${ub.book.author}"></div>
-							<div class="book-meta" th:text="'出版社: ' + ${ub.book.publisher}"></div>
-							<div class="book-meta"
-								th:text="'発行日: ' + ${#temporals.format(ub.book.publisherAt, 'yyyy/MM/dd')}"></div>
-
-							<div class="badge bg-primary" th:text="${ub.book.bookGenre.name}"></div>
-
-							<a href="/book/review/add"
-								class="btn btn-primary btn-sm w-100 mt-3"> この本のレビューを書く </a>
-
-							<form th:action="@{/book/soft-delete(id=${ub.id})}" method="post"
-								class="mt-2">
-								<button type="submit"
-									class="btn btn-outline-danger btn-sm w-100">本棚から外す</button>
-							</form>
-
-						</div>
-					</div>
-				</div>
-
-				<!-- ▼ ページネーション ▼ -->
+				<!-- 本棚に追加した書籍 ページネーション -->
 				<nav aria-label="Page navigation">
 					<ul class="pagination justify-content-center mt-4">
 
 						<!-- 前へ -->
 						<li class="page-item"
-							th:classappend="${books.currentPage == 1} ? ' disabled'"><a
+							th:classappend="${addedBooks.currentPage == 1} ? ' disabled'"><a
 							class="page-link"
-							th:href="@{/book/list(page=${books.currentPage - 1})}">前へ</a></li>
+							th:href="@{/book/list(page=${addedBooks.currentPage - 1})}">前へ</a></li>
 						<!-- ページ番号 -->
 						<li class="page-item"
-							th:each="i : ${#numbers.sequence(1, books.totalPages)}"
-							th:classappend="${books.currentPage == i} ? ' active'"><a
+							th:each="i : ${#numbers.sequence(1, addedBooks.totalPages)}"
+							th:classappend="${addedBooks.currentPage == i} ? ' active'"><a
 							class="page-link" th:href="@{/book/list(page=${i})}"
 							th:text="${i}"></a></li>
 						<!-- 次へ -->
 						<li class="page-item"
-							th:classappend="${books.currentPage == books.totalPages} ? ' disabled'">
+							th:classappend="${addedBooks.currentPage == addedBooks.totalPages} ? ' disabled'">
 							<a class="page-link"
-							th:href="@{/book/list(page=${books.currentPage + 1})}">次へ</a>
+							th:href="@{/book/list(page=${addedBooks.currentPage + 1})}">次へ</a>
 						</li>
 
-						<!--</ul>-->
-						<!--</nav>-->
-			</div>
+					</ul>
+				</nav>
+				
+			 </div>
+			
+			 <!-- ユーザー作成書籍 -->
+			 <div class="tab-pane fade"
+			          id="manual"
+			          role="tabpanel">
+			 
+			 <div class="d-flex flex-wrap gap-3 mt-4"
+			      th:unless="${#lists.isEmpty(manualBooks)}">
+
+			     <th:block th:each="ub : ${manualBooks}">
+			          <div th:replace="~{book/_book-card :: bookCard(${ub})}"> </div>
+			     </th:block>
+
+			 </div>
+			
 		</section>
+		
+		
 
 
 		<!-- ▼ トップページへ戻る ▼ -->

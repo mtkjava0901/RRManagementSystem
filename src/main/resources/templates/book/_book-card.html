@@ -1,0 +1,32 @@
+<div th:fragment="bookCard(ub)">
+    <div class="book-card p-3 clickable-card"
+         th:attr="data-href=@{/book/detail/{id}(id=${ub.id})}">
+
+        <div class="book-title" th:text="${ub.book.title}"></div>
+        <div class="book-meta" th:text="'著者: ' + ${ub.book.author}"></div>
+        <div class="book-meta" th:text="'出版社: ' + ${ub.book.publisher}"></div>
+
+        <div class="book-meta"
+             th:text="|発行日: ${ub.book.publisherAt != null
+                 ? #temporals.format(ub.book.publisherAt, 'yyyy/MM/dd')
+                 : ''}|">
+        </div>
+
+        <div class="badge bg-primary"
+             th:text="${ub.book.bookGenre.name}">
+        </div>
+
+        <a href="/book/review/add"
+           class="btn btn-primary btn-sm w-100 mt-3">
+            この本のレビューを書く
+        </a>
+
+        <form th:action="@{/book/remove(id=${ub.id})}"
+              method="post" class="mt-2">
+            <button type="submit"
+                    class="btn btn-outline-danger btn-sm w-100">
+                本棚から外す
+            </button>
+        </form>
+    </div>
+</div>

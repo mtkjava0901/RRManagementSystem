@@ -23,7 +23,8 @@
 	</resultMap>
 
 	<!-- 検索 + ソート + ページング -->
-	<select id="findBySearch" parameterType="map" resultMap="BookResultMap">
+	<select id="findBySearch" parameterType="map"
+		resultMap="BookResultMap">
 		SELECT
 		b.id,
 		b.title,
@@ -39,13 +40,15 @@
 		FROM books b
 		LEFT JOIN book_genres g ON b.genre = g.id
 		WHERE
-		b.status = 'ACT'
+		b.status =
+		'ACT'
 		AND b.manual = 1
 
 		<!-- 検索キーワード（タイトル OR 著者） -->
 		<if test="keyword != null and keyword != ''">
 			AND (b.title LIKE CONCAT('%', #{keyword}, '%')
-			OR b.author LIKE CONCAT('%', #{keyword}, '%'))
+			OR b.author
+			LIKE CONCAT('%', #{keyword}, '%'))
 		</if>
 
 		<!-- ジャンル絞り込み（0 の場合 = 全て） -->
@@ -86,12 +89,35 @@
 
 		<if test="keyword != null and keyword != ''">
 			AND (b.title LIKE CONCAT('%', #{keyword}, '%')
-			OR b.author LIKE CONCAT('%', #{keyword}, '%'))
+			OR b.author
+			LIKE CONCAT('%', #{keyword}, '%'))
 		</if>
 
 		<if test="genreId != null and genreId != 0">
 			AND b.genre = #{genreId}
 		</if>
 	</select>
+
+	<!-- Book新規登録（manual=false用） -->
+	<insert id="insert" parameterType="Book" useGeneratedKeys="true"
+		keyProperty="id">
+		INSERT INTO books (
+		title,
+		author,
+		publisher,
+		publisher_at,
+		genre,
+		status,
+		manual
+		) VALUES (
+		#{title},
+		#{author},
+		#{publisher},
+		#{publisherAt},
+		#{bookGenre.id},
+		#{status},
+		#{manual}
+		)
+	</insert>
 
 </mapper>

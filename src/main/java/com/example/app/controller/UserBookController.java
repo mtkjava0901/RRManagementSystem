@@ -1,5 +1,7 @@
 package com.example.app.controller;
 
+import java.util.List;
+
 import jakarta.servlet.http.HttpSession;
 
 import org.springframework.dao.DuplicateKeyException;
@@ -35,27 +37,41 @@ public class UserBookController {
 	// マイ本棚
 	@GetMapping("/list")
 	public String showBookList(
-			@RequestParam(value = "sort", required = false) String sort,
-			@RequestParam(value = "status", required = false) ReadingStatus status,
-			@RequestParam(value = "keyword", required = false) String keyword,
-			@RequestParam(value = "page", defaultValue = "1") int page,
+			@RequestParam(required = false) String sort,
+			@RequestParam(required = false) ReadingStatus status,
+			@RequestParam(required = false) String keyword,
+			@RequestParam(defaultValue = "1") int page,
 			Model model) {
 
 		Integer userId = getLoginUserId();
 		if (userId == null)
 			return "redirect:/login";
 
-		PaginatedResult<UserBook> books = userBookService.search(userId, sort, status, keyword, page);
+		// 本棚に追加した書籍(検索・ページング対象)
+		PaginatedResult<UserBook> addedBooks = userBookService.search(userId, sort, status, keyword, page);
 
-		model.addAttribute("books", books);
+		// ユーザー作成書籍(シンプル一覧)
+		List<UserBook> manualBooks = userBookService.getManualBooksByUser(userId);
+
+		model.addAttribute("addedBooks", addedBooks);
+		model.addAttribute("manualBooks", manualBooks);
+
+		// 既存パラメータ(画面維持用)
+		model.addAttribute("sort", sort);
+		model.addAttribute("status", status);
+		model.addAttribute("keyword", keyword);
 		model.addAttribute("userId", userId);
 		return "book/list";
 	}
 
-	// 本棚への追加（post）
+	// 本棚への追加（redirect後も同条件で再検索）
 	@PostMapping("/add-booklist")
 	public String addBookList(
-			@RequestParam("bookId") Integer bookId,
+			@RequestParam Integer bookId,
+			@RequestParam(required = false) String keyword,
+			@RequestParam(required = false) Integer genreId,
+			@RequestParam(required = false) String sort,
+			@RequestParam(required = false, defaultValue = "1") Integer page,
 			RedirectAttributes ra) {
 
 		Integer userId = getLoginUserId();
@@ -64,15 +80,27 @@ public class UserBookController {
 
 		try {
 			userBookService.add(userId, bookId);
-			ra.addFlashAttribute(
-					"successMessage",
-					"本棚に追加しました");
+
+			ra.addFlashAttribute("successMessage", "本棚に追加しました");
+
+			// クエリパラメータ(自動URLエンコード)
+			ra.addAttribute("doSearch", 1);
+			ra.addAttribute("keyword", keyword);
+			ra.addAttribute("genreId", genreId);
+			ra.addAttribute("sort", sort);
+			ra.addAttribute("page", page);
+
 			return "redirect:/book/search";
 
 		} catch (DuplicateKeyException e) {
 			ra.addFlashAttribute(
-					"errorMessage",
-					e.getMessage());
+					"errorMessage", e.getMessage());
+
+			ra.addAttribute("doSearch", 1);
+			ra.addAttribute("keyword", keyword);
+			ra.addAttribute("genreId", genreId);
+			ra.addAttribute("sort", sort);
+			ra.addAttribute("page", page);
 
 			return "redirect:/book/search";
 		}
@@ -81,7 +109,7 @@ public class UserBookController {
 	// 書籍詳細
 	@GetMapping("/detail/{id}")
 	public String bookDetail(
-			@PathVariable("id") Integer id,
+			@PathVariable Integer id,
 			Model model) {
 
 		Integer userId = getLoginUserId();
@@ -102,10 +130,10 @@ public class UserBookController {
 	// 書籍更新処理
 	@PostMapping("/update")
 	public String update(
-			@RequestParam("id") Integer id,
-			@RequestParam("rating") Integer rating,
-			@RequestParam("status") ReadingStatus status,
-			@RequestParam("memo") String memo) {
+			@RequestParam Integer id,
+			@RequestParam Integer rating,
+			@RequestParam ReadingStatus status,
+			@RequestParam String memo) {
 
 		Integer userId = getLoginUserId();
 		if (userId == null)
@@ -121,52 +149,24 @@ public class UserBookController {
 		return "redirect:/book/detail/" + id;
 	}
 
-	// 書籍からの削除ボタン（論理削除）
-	@PostMapping("/soft-delete")
-	public String softDelete(
-			@RequestParam("id") Integer id,
+	// 書籍削除(論理/物理統合済み)
+	@PostMapping("/remove")
+	public String removeFromShelf(
+			@RequestParam("id") Integer userBookId,
 			RedirectAttributes ra) {
 
 		Integer userId = getLoginUserId();
 		if (userId == null) {
-			ra.addFlashAttribute(
-					"errorMessage",
-					"ログイン状態が無効です。もう一度ログインしてください。");
+			ra.addFlashAttribute("errorMessage", "ログイン状態が無効です。もう一度ログインしてください。");
 			return "redirect:/login";
 		}
 
-		UserBook ub = userBookService.getById(id);
-		if (ub == null || !ub.getUserId().equals(userId)) {
-			ra.addFlashAttribute(
-					"errorMessage",
-					"この本は削除できません。");
-			return "redirect:/book/list";
+		try {
+			userBookService.remove(userBookId);
+			ra.addFlashAttribute("successMessage", "本棚から削除しました。");
+		} catch (RuntimeException e) {
+			ra.addFlashAttribute("errorMessage", e.getMessage());
 		}
-
-		userBookService.softDelete(id);
-
-		ra.addFlashAttribute(
-				"successMessage",
-				"本棚から削除しました。");
-
-		return "redirect:/book/list";
-	}
-
-	// マニュアル登録書籍の削除（物理削除）
-	@PostMapping("/hard-delete")
-	public String hardDelete(
-			@RequestParam("id") Integer id) {
-
-		Integer userId = getLoginUserId();
-		if (userId == null)
-			return "redirect:/login";
-
-		UserBook ub = userBookService.getById(id);
-		if (ub == null || !ub.getUserId().equals(userId)) {
-			return "redirect:/book/list";
-		}
-
-		userBookService.hardDelete(id);
 
 		return "redirect:/book/list";
 	}

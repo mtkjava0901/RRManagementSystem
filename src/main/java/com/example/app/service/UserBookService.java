@@ -2,6 +2,7 @@ package com.example.app.service;
 
 import java.util.List;
 
+import com.example.app.domain.Book;
 import com.example.app.domain.UserBook;
 import com.example.app.enums.ReadingStatus;
 
@@ -19,19 +20,33 @@ public interface UserBookService {
 	// 更新
 	int update(Integer id, Integer rating, ReadingStatus status, String memo);
 
-	// 論理削除
-	int softDelete(Integer id);
+	// 本棚から外す（論理物理両対応）
+	void remove(Integer userBookId);
 
-	// 物理削除
-	int hardDelete(Integer id);
-	
+	// SEARCH登録
+	void addFromSearch(Integer userId, Integer bookId);
+
+	// MANUAL登録
+	void addManual(Integer userId, Book book);
+
+	// 論理削除(内部用)
+	// int softDelete(Integer id);
+
+	// 物理削除(内部用)
+	// int hardDelete(Integer id);
+
 	// ページング検索
 	PaginatedResult<UserBook> search(
-      Integer userId,
-      String sort,
-      ReadingStatus status,
-      String keyword,
-      int page
-  );
+			Integer userId,
+			String sort,
+			ReadingStatus status,
+			String keyword,
+			int page);
+
+	// 本棚に追加した書籍（管理者/API書籍）
+	List<UserBook> getAddedBooksByUser(Integer userId);
+
+	// ユーザー作成書籍
+	List<UserBook> getManualBooksByUser(Integer userId);
 
 }

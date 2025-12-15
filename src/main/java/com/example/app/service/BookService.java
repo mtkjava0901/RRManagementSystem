@@ -3,6 +3,7 @@ package com.example.app.service;
 import java.util.List;
 
 import com.example.app.domain.Book;
+import com.example.app.form.BookForm;
 
 public interface BookService {
 
@@ -36,5 +37,15 @@ public interface BookService {
 			String sort,
 			int page,
 			int size);
+
+	/* ********
+	 * Add Book
+	 * ********/
+
+	// マニュアル書籍追加(/book/add)
+	Integer createManualBook(BookForm form);
+
+	// 本棚へ追加(未使用推奨)
+	// void add(Integer userId, Integer bookId);
 
 }

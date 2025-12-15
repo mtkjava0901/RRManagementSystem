@@ -44,17 +44,32 @@ public interface UserBookMapper {
 			@Param("status") ReadingStatus status,
 			@Param("keyword") String keyword);
 
-	// 重複追加回避
-	int exists(@Param("userId") Integer userId, @Param("bookId") Integer bookId);
-
-	// 倫理削除含め存在チェック
-	int existsAll(
+	// 本棚に存在(is_deleted=0)
+	UserBook selectActive(
 			@Param("userId") Integer userId,
 			@Param("bookId") Integer bookId);
 
-	// 倫理削除レコード復活(is_deleted1→0)
+	// 論理削除済み(is_deleted=1)
+	UserBook selectDeleted(
+			@Param("userId") Integer userId,
+			@Param("bookId") Integer bookId);
+
+	// 論理削除レコード復活(is_deleted1→0)
 	int restore(
-			@Param("userId") Integer userId,
-			@Param("bookId") Integer bookId);
+			@Param("id") Integer id);
+
+	// 本棚に追加(API/管理者書籍)
+	List<UserBook> selectAddedBooksByUser(Integer userId);
+
+	// ユーザー作成書籍
+	List<UserBook> selectManualBooksByUser(Integer userId);
+
+	// 重複追加回避
+	// int exists(@Param("userId") Integer userId, @Param("bookId") Integer bookId);
+
+	// 論理削除含め存在チェック
+	// int existsAll(
+	//		@Param("userId") Integer userId,
+	//		@Param("bookId") Integer bookId);
 
 }

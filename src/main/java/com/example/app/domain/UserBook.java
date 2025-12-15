@@ -2,6 +2,7 @@ package com.example.app.domain;
 
 import java.time.LocalDateTime;
 
+import com.example.app.enums.BookSource;
 import com.example.app.enums.ReadingStatus;
 
 import lombok.Data;
@@ -25,9 +26,11 @@ public class UserBook {
 
 	private LocalDateTime createdAt; // 登録日時
 
-	private LocalDateTime updatedAt; // 更新一時
+	private LocalDateTime updatedAt; // 更新日時
 
 	private Boolean isDeleted; // 本棚から外されたか 0=false(本棚に存在), 1=true(論理削除済)
 
 	private Book book; // JOINでbook情報を持たせる場合(一応用意)
+
+	private BookSource source; // 登録元(ENUM型)
 }

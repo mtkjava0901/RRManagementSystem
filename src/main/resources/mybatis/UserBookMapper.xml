@@ -101,22 +101,22 @@
 		)
 	</insert>
 
-	<!-- 倫理削除含め存在チェック -->
+	<!-- 重複追加回避(使用非推奨) -->
+	<select id="exists" resultType="int">
+		SELECT COUNT(*)
+		FROM user_books
+		WHERE user_id = #{userId}
+		AND book_id = #{bookId}
+		AND is_deleted = 0
+	</select>
+
+	<!-- 論理削除含め存在チェック(使用非推奨) -->
 	<select id="existsAll" resultType="int">
 		SELECT COUNT(*)
 		FROM user_books
 		WHERE user_id = #{userId}
 		AND book_id = #{bookId}
 	</select>
-
-	<!-- 倫理削除レコード復活(is_deleted1→0) -->
-	<update id="restore">
-		UPDATE user_books
-		SET is_deleted = 0,
-		updated_at = CURRENT_TIMESTAMP
-		WHERE user_id = #{userId}
-		AND book_id = #{bookId}
-	</update>
 
 	<!-- 更新 -->
 	<update id="update" parameterType="UserBook">
@@ -166,6 +166,7 @@
 		WHERE ub.user_id = #{userId}
 		AND
 		ub.is_deleted = 0
+		AND b.manual = 1
 
 		<if test="status != null">
 			AND ub.status = #{status}
@@ -216,13 +217,87 @@
 		</if>
 	</select>
 
-	<!-- 重複追加回避 -->
-	<select id="exists" resultType="int">
-		SELECT COUNT(*)
+
+	<!-- 本棚に存在(is_deleted=0) -->
+	<select id="selectActive" resultType="UserBook">
+		SELECT id, user_id,
+		book_id, is_deleted
 		FROM user_books
 		WHERE user_id = #{userId}
-		AND book_id = #{bookId}
+		AND book_id
+		= #{bookId}
 		AND is_deleted = 0
 	</select>
+
+	<!-- 論理削除済み(is_deleted=1) -->
+	<select id="selectDeleted" resultType="UserBook">
+		SELECT id, user_id,
+		book_id, is_deleted
+		FROM user_books
+		WHERE user_id = #{userId}
+		AND book_id
+		= #{bookId}
+		AND is_deleted = 1
+	</select>
+
+	<!-- 論理削除レコード復活(is_deleted1→0) -->
+	<update id="restore">
+		UPDATE user_books
+		SET is_deleted = 0,
+		updated_at =
+		NOW()
+		WHERE id = #{id}
+	</update>
+
+	<!-- 本棚に追加(API/管理者書籍) -->
+	<select id="selectAddedBooksByUser" parameterType="int"
+		resultMap="UserBookResultMap">
+		SELECT
+		ub.*,
+		b.id AS b_id,
+		b.title AS b_title,
+		b.author AS
+		b_author,
+		b.publisher AS b_publisher,
+		b.publisher_at AS b_publisher_at,
+		b.genre AS b_genre,
+		b.status AS b_status,
+		b.manual AS b_manual
+		FROM
+		user_books ub
+		LEFT JOIN books b ON ub.book_id = b.id
+		WHERE ub.user_id =
+		#{userId}
+		AND ub.is_deleted = 0
+		AND b.manual = 1
+		ORDER BY ub.created_at
+		DESC
+	</select>
+
+	<!-- ユーザー作成書籍 -->
+	<select id="selectManualBooksByUser" parameterType="int"
+		resultMap="UserBookResultMap">
+		SELECT
+		ub.*,
+		b.id AS b_id,
+		b.title AS b_title,
+		b.author AS
+		b_author,
+		b.publisher AS b_publisher,
+		b.publisher_at AS b_publisher_at,
+		b.genre AS b_genre,
+		b.status AS b_status,
+		b.manual AS b_manual
+		FROM
+		user_books ub
+		LEFT JOIN books b ON ub.book_id = b.id
+		WHERE ub.user_id =
+		#{userId}
+		AND ub.is_deleted = 0
+		AND b.manual = 0
+		ORDER BY ub.created_at
+		DESC
+	</select>
+
 
 </mapper>
