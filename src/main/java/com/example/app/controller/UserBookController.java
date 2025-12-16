@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.app.domain.User;
 import com.example.app.domain.UserBook;
 import com.example.app.enums.ReadingStatus;
 import com.example.app.service.PaginatedResult;
@@ -45,6 +46,12 @@ public class UserBookController {
 		Integer userId = getLoginUserId();
 		if (userId == null)
 			return "redirect:/login";
+
+		// セッションからユーザー取得
+		User user = (User) session.getAttribute("user");
+		if (user != null) {
+			model.addAttribute("username", user.getName());
+		}
 
 		// 本棚に追加した書籍(検索・ページング対象)
 		PaginatedResult<UserBook> addedBooks = userBookService.search(userId, sort, status, keyword, page);
@@ -107,6 +114,12 @@ public class UserBookController {
 		if (userId == null)
 			return "redirect:/login";
 
+		// セッションからユーザー取得
+		User user = (User) session.getAttribute("user");
+		if (user != null) {
+			model.addAttribute("username", user.getName());
+		}
+
 		UserBook ub = userBookService.getById(id);
 
 		// 不正アクセス防止
@@ -116,9 +129,6 @@ public class UserBookController {
 
 		// List<Review> reviews = bookService.findReviewsByBookId(id); // レビュー用
 		model.addAttribute("book", ub);
-
-		// PaginatedResult<UserBook> addedBooks = userBookService.search(userId, null, null, null, 1);
-		// model.addAttribute("addedBooks", addedBooks);
 
 		return "book/detail";
 	}
@@ -165,18 +175,6 @@ public class UserBookController {
 		}
 
 		return "redirect:/book/list";
-	}
-
-	// 書籍詳細(after/確認用)
-	@GetMapping("/detail-after")
-	public String bookDetailAfter() {
-		return "book/detail-after";
-	}
-
-	// 本詳細ページ(テスト/確認用)
-	@GetMapping("/detail-test")
-	public String bookDetailTest() {
-		return "book/detail-test";
 	}
 
 }

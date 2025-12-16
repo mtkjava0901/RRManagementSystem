@@ -29,9 +29,10 @@
 	<!-- ▼ Header（タイトル中央, ログアウト右端, 下段メニュー） ▼ -->
 	<header class="bg-dark text-white py-3 mb-4">
 		<div class="container">
-			<div class="d-flex align-items-center position-relative">
+			<div class="d-flex align-items-center justify-content-between">
 				<h1 class="text-center flex-grow-1 m-0 fs-3">読書記録管理システム</h1>
-				<div class="position-absolute end-0">
+				<div class="d-none d-md-block">
+					<span th:text="${username}">アカウント名</span>さん、ようこそ
 					<a th:href="@{/logout}" class="btn btn-outline-light btn-sm">ログアウト</a>
 				</div>
 			</div>

@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.app.domain.Book;
 import com.example.app.domain.BookGenre;
+import com.example.app.domain.User;
 import com.example.app.form.BookForm;
 import com.example.app.service.BookGenreService;
 import com.example.app.service.BookService;
@@ -60,6 +61,12 @@ public class BookController {
 		// 初回アクセス(doSearchなし&keywordなし)
 		if (!isSearchTriggered && keyword == null) {
 			List<BookGenre> genres = bookGenreService.findAll();
+
+			// セッションからユーザー取得
+			User user = (User) session.getAttribute("user");
+			if (user != null) {
+				model.addAttribute("username", user.getName());
+			}
 
 			model.addAttribute("bookList", List.of());
 			model.addAttribute("genres", genres);
@@ -112,6 +119,13 @@ public class BookController {
 	// 本を追加する(ユーザー登録)
 	@GetMapping("/add")
 	public String addBook(Model model) {
+
+		// セッションからユーザー取得
+		User user = (User) session.getAttribute("user");
+		if (user != null) {
+			model.addAttribute("username", user.getName());
+		}
+
 		model.addAttribute("bookForm", new BookForm());
 		model.addAttribute("genres", bookGenreService.findAll());
 		return "book/add";

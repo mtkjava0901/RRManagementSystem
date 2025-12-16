@@ -46,7 +46,8 @@
 		<div class="container">
 			<div class="d-flex align-items-center position-relative">
 				<h1 class="text-center flex-grow-1 m-0 fs-3">読書記録管理システム</h1>
-				<div class="position-absolute end-0">
+				<div class="d-none d-md-block">
+					<span th:text="${username}">アカウント名</span>さん、ようこそ
 					<a th:href="@{/logout}" class="btn btn-outline-light btn-sm">ログアウト</a>
 				</div>
 			</div>
@@ -197,26 +198,27 @@
 		});
 	</script>
 	<script>
-	document.addEventListener("DOMContentLoaded", () => {
-	    // remove-btn クラスがついたボタン全てに処理
-	    document.querySelectorAll('.remove-btn').forEach(btn => {
-	        btn.addEventListener('click', function(e) {
-	            e.preventDefault(); // 一旦フォーム送信を止める
+		document.addEventListener("DOMContentLoaded", () => {
+			// remove-btn クラスがついたボタン全てに処理
+			document.querySelectorAll('.remove-btn').forEach(btn => {
+				btn.addEventListener('click', function (e) {
+					e.preventDefault(); // 一旦フォーム送信を止める
 
-	            // 確認ダイアログ
-	            const confirmed = confirm(
-	                "本当に本棚から外しますか？\n(手動登録された本の場合、入力データは全て消去されます)"
-	            );
+					// 確認ダイアログ
+					const confirmed = confirm(
+						"本当に本棚から外しますか？\n(手動登録された本の場合、入力データは全て消去されます)"
+					);
 
-	            if (confirmed) {
-	                // OKならフォーム送信
-	                this.closest('form').submit();
-	            }
-	            // キャンセルなら何もしない
-	        });
-	    });
-	});
+					if (confirmed) {
+						// OKならフォーム送信
+						this.closest('form').submit();
+					}
+					// キャンセルなら何もしない
+				});
+			});
+		});
 	</script>
 
 </body>
+
 </html>

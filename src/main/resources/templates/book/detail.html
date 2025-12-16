@@ -54,7 +54,8 @@
 		<div class="container">
 			<div class="d-flex align-items-center position-relative">
 				<h1 class="text-center flex-grow-1 m-0 fs-3">読書記録管理システム</h1>
-				<div class="position-absolute end-0">
+				<div class="d-none d-md-block">
+					<span th:text="${username}">アカウント名</span>さん、ようこそ
 					<a th:href="@{/logout}" class="btn btn-outline-light btn-sm">ログアウト</a>
 				</div>
 			</div>
@@ -185,34 +186,34 @@
 
 			<!-- ▼ 書籍情報 ▼ -->
 			<div class="tab-pane fade" id="info" role="tabpanel">
-			    <h4 class="mb-3">書籍情報</h4>
+				<h4 class="mb-3">書籍情報</h4>
 
-			    <div class="card p-3">
-			        <div class="row mb-2">
-			            <div class="col-4 fw-bold">書籍名</div>
-			            <div class="col-8" th:text="${book.book.title}">書籍名</div>
-			        </div>
+				<div class="card p-3">
+					<div class="row mb-2">
+						<div class="col-4 fw-bold">書籍名</div>
+						<div class="col-8" th:text="${book.book.title}">書籍名</div>
+					</div>
 
-			        <div class="row mb-2">
-			            <div class="col-4 fw-bold">著者</div>
-			            <div class="col-8" th:text="${book.book.author}">著者</div>
-			        </div>
+					<div class="row mb-2">
+						<div class="col-4 fw-bold">著者</div>
+						<div class="col-8" th:text="${book.book.author}">著者</div>
+					</div>
 
-			        <div class="row mb-2">
-			            <div class="col-4 fw-bold">出版社</div>
-			            <div class="col-8" th:text="${book.book.publisher}">出版社</div>
-			        </div>
+					<div class="row mb-2">
+						<div class="col-4 fw-bold">出版社</div>
+						<div class="col-8" th:text="${book.book.publisher}">出版社</div>
+					</div>
 
-			        <div class="row mb-2">
-			            <div class="col-4 fw-bold">発行日</div>
-			            <div class="col-8" th:text="${#temporals.format(book.book.publisherAt, 'yyyy/MM/dd')}">発行日</div>
-			        </div>
+					<div class="row mb-2">
+						<div class="col-4 fw-bold">発行日</div>
+						<div class="col-8" th:text="${#temporals.format(book.book.publisherAt, 'yyyy/MM/dd')}">発行日</div>
+					</div>
 
-			        <div class="row mb-2">
-			            <div class="col-4 fw-bold">ジャンル</div>
-			            <div class="col-8" th:text="${book.book.bookGenre.name}">ジャンル</div>
-			        </div>
-			    </div>
+					<div class="row mb-2">
+						<div class="col-4 fw-bold">ジャンル</div>
+						<div class="col-8" th:text="${book.book.bookGenre.name}">ジャンル</div>
+					</div>
+				</div>
 			</div>
 
 		</div>
