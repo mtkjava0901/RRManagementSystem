@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.app.mapper.ReviewMapper">
+
+	<!-- 1件レビュー追加 -->
+	<insert id="insertReview" parameterType="Review"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO Reviews (user_id,
+		book_id, rating, comment,
+		created_at,
+		updated_at)
+		VALUES (#{userId},
+		#{bookId}, #{rating},
+		#{comment}, NOW(), NOW())
+	</insert>
+
+	<!-- 書籍単位のレビュー一覧取得(新着順) -->
+	<select id="selectReviewsByBookId" parameterType="int"
+		resultType="Review">
+		SELECT id, user_id AS userId, book_id AS bookId, rating,
+		comment, created_at
+		AS createdAt, updated_at AS updatedAt
+		FROM Reviews
+		WHERE book_id = #{bookId}
+		ORDER BY created_at DESC
+	</select>
+
+	<!-- 書籍単位のレビュー1件取得 -->
+	<select id="selectReviewById" parameterType="int"
+		resultType="Review">
+		SELECT id, user_id AS userId, book_id AS bookId, rating,
+		comment, created_at
+		AS createdAt, updated_at AS updatedAt
+		FROM Reviews
+		WHERE id = #{reviewId}
+	</select>
+
+	<!-- 全レビュー取得(新着順) -->
+	<select id="selectAllReviews" resultType="Review">
+		SELECT id, user_id AS
+		userId, book_id AS bookId, rating, comment, created_at
+		AS createdAt,
+		updated_at AS updatedAt
+		FROM Reviews
+		ORDER BY created_at DESC
+	</select>
+
+	<!-- ユーザーが書籍に既にレビューしているかチェック -->
+	<select id="selectByUserAndBook" resultType="Review">
+		SELECT id, user_id
+		AS userId, book_id AS bookId, rating, comment, created_at
+		AS createdAt,
+		updated_at AS updatedAt
+		FROM Reviews
+		WHERE user_id = #{userId} AND
+		book_id = #{bookId}
+	</select>
+
+</mapper>
