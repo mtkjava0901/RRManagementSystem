@@ -20,14 +20,17 @@ public interface BookMapper {
 	// 書籍詳細
 	Book selectById(Integer id);
 
-	// 書籍追加
-	void insert(Book book);
+	// 書籍追加(未使用？)
+	// void insert(Book book);
 
 	// 書籍編集
 	void update(Book book);
 
-	// 書籍削除(論理削除)
+	// 書籍削除
 	void delete(Integer id);
+
+	// 書籍マニュアル登録
+	void insert(Book book);
 
 	/* ********
 	 * 検索 & ページネーション

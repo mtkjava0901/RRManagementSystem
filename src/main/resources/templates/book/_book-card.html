@@ -1,0 +1,40 @@
+<div th:fragment="bookCard(ub)">
+	<div class="book-card p-3 clickable-card" th:attr="data-href=@{/book/detail/{id}(id=${ub.id})}">
+
+		<!-- タイトル -->
+		<div class="book-title mb-1" th:text="${ub.book.title}"></div>
+
+		<!-- ジャンルバッジ -->
+		<div class="mb-2">
+			<span th:text="${ub.book.bookGenre.name}" th:class="'badge me-1 mb-1 ' +
+					(${ub.book.bookGenre.name.contains('ビジネス') ? 'badge-genre-warning' :
+					                  ub.book.bookGenre.name == '小説' ? 'badge-genre-primary' :
+					                  ub.book.bookGenre.name == '漫画' ? 'badge-genre-success' :
+					                  'badge-genre-secondary'})">
+			</span>
+		</div>
+		<!-- 著者 -->
+		<div class="book-meta mb-1" th:text="'著者: ' + ${ub.book.author}"></div>
+
+		<!-- 出版社 -->
+		<div class="book-meta mb-1" th:text="'出版社: ' + ${ub.book.publisher}"></div>
+
+		<!-- 発行日 -->
+		<div class="book-meta mb-2"
+			th:text="|発行日: ${ub.book.publisherAt != null ? #temporals.format(ub.book.publisherAt, 'yyyy/MM/dd') : ''}|">
+		</div>
+
+
+		<!-- レビューボタン -->
+		<a href="/book/review/add" class="btn btn-sm btn-primary" style="width: auto;">
+			この本のレビューを書く
+		</a>
+
+		<!-- 本棚から外すボタン -->
+		<form th:action="@{/book/remove(id=${ub.id})}" method="post" class="remove-form mt-1">
+			<button type="submit" class="btn btn-sm btn-outline-danger remove-btn d-block text-start">
+				本棚から外す
+			</button>
+		</form>
+	</div>
+</div>

@@ -61,7 +61,7 @@
 	
 	<!-- 同じログインID(Email)が存在するか判定 -->
 	<select id="countByLoginId" resultType="int">
-		SELECT COUNT (*)
+		SELECT COUNT(*)
 		FROM users AS user
 		WHERE login_id = #{loginId}
 		AND status = 'ACT'

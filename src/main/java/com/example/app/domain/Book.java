@@ -8,6 +8,8 @@ import lombok.Data;
 @Data
 public class Book {
 
+	// 書籍
+
 	private Integer id; // PK
 
 	private String title; // 書籍名
@@ -24,8 +26,8 @@ public class Book {
 
 	private LocalDateTime updatedAt; // 更新日時(管理用)
 
-	private String status; // 状態
+	private String status; // 状態(ACTorDEL)
 
-	private Boolean manual; // 0=ユーザー追加(物理削除用) 1=管理者追加
+	private Boolean manual; // true(0)=ユーザー手動登録書籍 false(1)=管理者/API由来の書籍
 
 }

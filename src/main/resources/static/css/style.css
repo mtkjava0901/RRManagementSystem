@@ -8,3 +8,24 @@ body {
 .error-message {
   color: #f00;
 }
+/* ジャンルバッジ色 */
+.badge-genre-primary { background-color: #0d6efd; }       /* 小説 */
+.badge-genre-success { background-color: #198754; }       /* 漫画 */
+.badge-genre-warning { background-color: #ffc107; color: #000; } /* ビジネス・実用 */
+.badge-genre-secondary { background-color: #6c757d; }     /* その他 */
+
+/* バッジのサイズ調整 */
+.book-card .badge {
+    display: inline-block;   /* 横幅をテキストに合わせる */
+    width: auto;             /* 横長にならない */
+    line-height: 1.2;        /* 高さをコンパクトに */
+    font-size: 0.75rem;
+    padding: 0.25em 0.4em;
+    margin-top: 0.5rem;
+}
+
+/* ボタンサイズ・左揃え */
+.book-card .btn {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.5rem;
+}
