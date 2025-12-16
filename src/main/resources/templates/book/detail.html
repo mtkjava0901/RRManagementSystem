@@ -2,343 +2,346 @@
 <html lang="ja" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8">
-    <title>書籍詳細 | 読書記録管理システム</title>
+	<meta charset="UTF-8">
+	<title>書籍詳細 | 読書記録管理システム</title>
 	<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
 	<link th:href="@{/css/style.css}" rel="stylesheet">
 
-    <style>
-        /* ★ 星評価 CSS */
-        .star-rating {
-            font-size: 2rem;
-            cursor: pointer;
-        }
-        .star {
-            color: #ccc;
-        }
-        .star.selected {
-            color: #f7c400;
-        }
+	<style>
+		/* ★ 星評価 CSS */
+		.star-rating {
+			font-size: 2rem;
+			cursor: pointer;
+		}
 
-        /* レビュー UI 改良 */
-        .review-card {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 16px;
-            background: #fff;
-        }
-        .review-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 6px;
-        }
-        .review-user {
-            font-weight: bold;
-        }
-        .review-stars {
-            color: #f7c400;
-            font-size: 1.1rem;
-        }
-    </style>
+		.star {
+			color: #ccc;
+		}
+
+		.star.selected {
+			color: #f7c400;
+		}
+
+		/* レビュー UI 改良 */
+		.review-card {
+			border: 1px solid #ddd;
+			border-radius: 8px;
+			padding: 16px;
+			background: #fff;
+		}
+
+		.review-header {
+			display: flex;
+			justify-content: space-between;
+			margin-bottom: 6px;
+		}
+
+		.review-user {
+			font-weight: bold;
+		}
+
+		.review-stars {
+			color: #f7c400;
+			font-size: 1.1rem;
+		}
+	</style>
 </head>
 
 <body>
 
-    <!-- ▼ Header ▼ -->
-    <header class="bg-dark text-white py-3 mb-4">
-        <div class="container">
-            <div class="d-flex align-items-center position-relative">
-                <h1 class="text-center flex-grow-1 m-0 fs-3">読書記録管理システム</h1>
-                <div class="position-absolute end-0">
-                    <a th:href="@{/logout}" class="btn btn-outline-light btn-sm">ログアウト</a>
-                </div>
-            </div>
+	<!-- ▼ Header ▼ -->
+	<header class="bg-dark text-white py-3 mb-4">
+		<div class="container">
+			<div class="d-flex align-items-center position-relative">
+				<h1 class="text-center flex-grow-1 m-0 fs-3">読書記録管理システム</h1>
+				<div class="position-absolute end-0">
+					<a th:href="@{/logout}" class="btn btn-outline-light btn-sm">ログアウト</a>
+				</div>
+			</div>
 
-            <nav class="mt-3">
-                <ul class="nav justify-content-center">
-                    <li class="nav-item"><a th:href="@{/home}" class="nav-link px-3 text-white">トップ</a></li>
-                    <li class="nav-item"><a th:href="@{/book/search}" class="nav-link px-3 text-white">本を探す</a></li>
-                    <li class="nav-item"><a th:href="@{/book/list}" class="nav-link px-3 text-white">マイ本棚</a></li>
-                    <li class="nav-item"><a href="/book/recommend" class="nav-link px-3 text-white">あなたへのおすすめ</a></li>
-                    <li class="nav-item"><a href="/book/review/list" class="nav-link px-3 text-white">新着レビュー</a></li>
-                    <li class="nav-item"><a href="/book/ranking" class="nav-link px-3 text-white">ランキング</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+			<nav class="mt-3">
+				<ul class="nav justify-content-center">
+					<li class="nav-item"><a th:href="@{/home}" class="nav-link px-3 text-white">トップ</a></li>
+					<li class="nav-item"><a th:href="@{/book/search}" class="nav-link px-3 text-white">本を探す</a></li>
+					<li class="nav-item"><a th:href="@{/book/list}" class="nav-link px-3 text-white">マイ本棚</a></li>
+					<li class="nav-item"><a href="/book/recommend" class="nav-link px-3 text-white">あなたへのおすすめ</a></li>
+					<li class="nav-item"><a href="/book/review/list" class="nav-link px-3 text-white">新着レビュー</a></li>
+					<li class="nav-item"><a href="/book/ranking" class="nav-link px-3 text-white">ランキング</a></li>
+				</ul>
+			</nav>
+		</div>
+	</header>
 
-    <main class="container mb-5">
+	<main class="container mb-5">
 
-        <!-- ▼ タブメニュー ▼ -->
-        <ul class="nav nav-tabs" id="bookDetailTabs" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="mydata-tab" data-bs-toggle="tab" data-bs-target="#mydata"
-                    type="button" role="tab">
-                    マイデータ
-                </button>
-            </li>
+		<!-- ▼ タブメニュー ▼ -->
+		<ul class="nav nav-tabs" id="bookDetailTabs" role="tablist">
+			<li class="nav-item" role="presentation">
+				<button class="nav-link active" id="mydata-tab" data-bs-toggle="tab" data-bs-target="#mydata"
+					type="button" role="tab">
+					マイデータ
+				</button>
+			</li>
 
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="review-tab" data-bs-toggle="tab" data-bs-target="#review" type="button"
-                    role="tab">
-                    レビュー
-                </button>
-            </li>
+			<li class="nav-item" role="presentation">
+				<button class="nav-link" id="review-tab" data-bs-toggle="tab" data-bs-target="#review" type="button"
+					role="tab">
+					レビュー
+				</button>
+			</li>
 
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button"
-                    role="tab">
-                    書籍情報
-                </button>
-            </li>
-        </ul>
+			<li class="nav-item" role="presentation">
+				<button class="nav-link" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button"
+					role="tab">
+					書籍情報
+				</button>
+			</li>
+		</ul>
 
-        <!-- ▼ タブ内容 ▼ -->
-        <div class="tab-content border border-top-0 p-4 bg-white">
+		<!-- ▼ タブ内容 ▼ -->
+		<div class="tab-content border border-top-0 p-4 bg-white">
 
-            <!-- ▼ マイデータ ▼ -->
-            <div class="tab-pane fade show active" id="mydata" role="tabpanel">
+			<!-- ▼ マイデータ ▼ -->
+			<div class="tab-pane fade show active" id="mydata" role="tabpanel">
 
-                <div class="d-flex justify-content-between mb-3">
-                    <h4 class="m-0">マイデータ</h4>
+				<div class="d-flex justify-content-between mb-3">
+					<h4 class="m-0">マイデータ</h4>
 
-                    <!-- ★ 「編集」ボタンを追加 -->
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editMyDataModal">
-                        編集
-                    </button>
-                </div>
+					<!-- ★ 「編集」ボタンを追加 -->
+					<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editMyDataModal">
+						編集
+					</button>
+				</div>
 
-                <!-- ★ 以下はそのままのレイアウトで固定表示にする（入力欄はモーダルに移動） -->
+				<!-- ★ 以下はそのままのレイアウトで固定表示にする（入力欄はモーダルに移動） -->
 				<p>星評価：
-				    <span th:if="${book.rating != null}">
-				        <span th:each="i : ${#numbers.sequence(1, book.rating)}">★</span>
-				    </span>
+					<span th:if="${book.rating != null}">
+						<span th:each="i : ${#numbers.sequence(1, book.rating)}">★</span>
+					</span>
 				</p>
-				
+
 				<p>読書ステータス：
-				    <span th:text="${book.status.label}"></span>
+					<span th:text="${book.status.label}"></span>
 				</p>
 
 				<p>メモ：
-				    <span th:text="${book.memo} ?: '（未入力）'"></span>
+					<span th:text="${book.memo} ?: '（未入力）'"></span>
 				</p>
 
-                <!--<p>星評価：★★★★★（例）</p>-->
-                <!--<p>読書ステータス：既読</p>-->
-                <!--<p>メモ：ここにメモが表示されます。</p>-->
+				<!--<p>星評価：★★★★★（例）</p>-->
+				<!--<p>読書ステータス：既読</p>-->
+				<!--<p>メモ：ここにメモが表示されます。</p>-->
 
-            </div>
+			</div>
 
 			<!-- ▼ レビュー（UI 強化版） ▼ -->
 			<div class="tab-pane fade" id="review" role="tabpanel">
 
-			    <div class="d-flex justify-content-between align-items-center mb-3">
-			        <h4 class="m-0">レビュー一覧</h4>
-			        <a href="/book/review/add" class="btn btn-primary">レビューを書く</a>
-			    </div>
+				<div class="d-flex justify-content-between align-items-center mb-3">
+					<h4 class="m-0">レビュー一覧</h4>
+					<a href="/book/review/add" class="btn btn-primary">レビューを書く</a>
+				</div>
 
-			    <!-- ▼ レビューリスト ▼ -->
-			    <div class="review-card mb-3">
-			        <div class="review-header">
-			            <span class="review-user">ユーザーA さん</span>
-			            <span class="text-muted small">2025/01/10</span>
-			        </div>
-			        <div class="review-stars mb-2">★★★★☆</div>
-			        <div class="review-body">展開が面白く、一気に読んでしまいました。</div>
-			    </div>
+				<!-- ▼ レビューリスト ▼ -->
+				<div class="review-card mb-3">
+					<div class="review-header">
+						<span class="review-user">ユーザーA さん</span>
+						<span class="text-muted small">2025/01/10</span>
+					</div>
+					<div class="review-stars mb-2">★★★★☆</div>
+					<div class="review-body">展開が面白く、一気に読んでしまいました。</div>
+				</div>
 
-			    <div class="review-card mb-3">
-			        <div class="review-header">
-			            <span class="review-user">ユーザーB さん</span>
-			            <span class="text-muted small">2025/01/05</span>
-			        </div>
-			        <div class="review-stars mb-2">★★★☆☆</div>
-			        <div class="review-body">文章が読みやすかったです。</div>
-			    </div>
+				<div class="review-card mb-3">
+					<div class="review-header">
+						<span class="review-user">ユーザーB さん</span>
+						<span class="text-muted small">2025/01/05</span>
+					</div>
+					<div class="review-stars mb-2">★★★☆☆</div>
+					<div class="review-body">文章が読みやすかったです。</div>
+				</div>
 
-			    <div class="review-card mb-3">
-			        <div class="review-header">
-			            <span class="review-user">ユーザーC さん</span>
-			            <span class="text-muted small">2025/01/02</span>
-			        </div>
-			        <div class="review-stars mb-2">★★★★★</div>
-			        <div class="review-body">とても良い作品でした！</div>
-			    </div>
+				<div class="review-card mb-3">
+					<div class="review-header">
+						<span class="review-user">ユーザーC さん</span>
+						<span class="text-muted small">2025/01/02</span>
+					</div>
+					<div class="review-stars mb-2">★★★★★</div>
+					<div class="review-body">とても良い作品でした！</div>
+				</div>
 
-			    <!-- ▼ ページネーション ▼ -->
-			    <nav>
-			        <ul class="pagination justify-content-center mt-4">
-			            <li class="page-item disabled"><span class="page-link">«</span></li>
-			            <li class="page-item active"><span class="page-link">1</span></li>
-			            <li class="page-item"><a class="page-link" href="?page=2">2</a></li>
-			            <li class="page-item"><a class="page-link" href="?page=3">3</a></li>
-			            <li class="page-item"><a class="page-link" href="?page=2">»</a></li>
-			        </ul>
-			    </nav>
+				<!-- ▼ ページネーション ▼ -->
+				<nav>
+					<ul class="pagination justify-content-center mt-4">
+						<li class="page-item disabled"><span class="page-link">«</span></li>
+						<li class="page-item active"><span class="page-link">1</span></li>
+						<li class="page-item"><a class="page-link" href="?page=2">2</a></li>
+						<li class="page-item"><a class="page-link" href="?page=3">3</a></li>
+						<li class="page-item"><a class="page-link" href="?page=2">»</a></li>
+					</ul>
+				</nav>
 
 			</div>
 
-			        <!-- ▼ 書籍情報 ▼ -->
-			        <div class="tab-pane fade" id="info" role="tabpanel">
-			            <h4 class="mb-3">書籍情報</h4>
+			<!-- ▼ 書籍情報 ▼ -->
+			<div class="tab-pane fade" id="info" role="tabpanel">
+			    <h4 class="mb-3">書籍情報</h4>
 
-			            <table class="table table-bordered">
-			                <tbody>
-			                    <tr>
-			                        <th class="w-25">書籍名</th>
-			                        <td>サンプル書籍タイトル</td>
-			                    </tr>
-			                    <tr>
-			                        <th>著者</th>
-			                        <td>山田 太郎</td>
-			                    </tr>
-			                    <tr>
-			                        <th>出版社</th>
-			                        <td>サンプル出版社</td>
-			                    </tr>
-			                    <tr>
-			                        <th>発行日</th>
-			                        <td>2023-05-01</td>
-			                    </tr>
-			                    <tr>
-			                        <th>ジャンル</th>
-			                        <td>小説</td>
-			                    </tr>
-			                </tbody>
-			            </table>
+			    <div class="card p-3">
+			        <div class="row mb-2">
+			            <div class="col-4 fw-bold">書籍名</div>
+			            <div class="col-8" th:text="${book.book.title}">書籍名</div>
 			        </div>
 
+			        <div class="row mb-2">
+			            <div class="col-4 fw-bold">著者</div>
+			            <div class="col-8" th:text="${book.book.author}">著者</div>
+			        </div>
+
+			        <div class="row mb-2">
+			            <div class="col-4 fw-bold">出版社</div>
+			            <div class="col-8" th:text="${book.book.publisher}">出版社</div>
+			        </div>
+
+			        <div class="row mb-2">
+			            <div class="col-4 fw-bold">発行日</div>
+			            <div class="col-8" th:text="${#temporals.format(book.book.publisherAt, 'yyyy/MM/dd')}">発行日</div>
+			        </div>
+
+			        <div class="row mb-2">
+			            <div class="col-4 fw-bold">ジャンル</div>
+			            <div class="col-8" th:text="${book.book.bookGenre.name}">ジャンル</div>
+			        </div>
 			    </div>
-			</main>
+			</div>
+
+		</div>
+	</main>
 
 	<!-- ▼ 本棚へ戻るボタン ▼ -->
-	    <div class="container text-center my-4">
-	        <a href="/book/list" class="btn btn-outline-secondary btn-lg">
-	            本棚へ戻る
-	        </a>
-	    </div>
+	<div class="container text-center my-4">
+		<a href="/book/list" class="btn btn-outline-secondary btn-lg">
+			本棚へ戻る
+		</a>
+	</div>
 
-    <!-- ▼ Footer ▼ -->
-    <footer class="mt-5 py-3 bg-dark text-center text-white">
-        © 読書記録管理システム
-    </footer>
+	<!-- ▼ Footer ▼ -->
+	<footer class="mt-5 py-3 bg-dark text-center text-white">
+		© 読書記録管理システム
+	</footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 
-    <!-- マイデータ編集モーダル -->
-    <div class="modal fade" id="editMyDataModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
+	<!-- マイデータ編集モーダル -->
+	<div class="modal fade" id="editMyDataModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
 
 				<!-- Form -->
 				<form th:action="@{/book/update}" method="post">
-					
+
 					<!-- hidden id -->
 					<input type="hidden" name="id" th:value="${book.id}">
-				
+
 					<div class="modal-header">
-                    	<h5 class="modal-title">マイデータを編集</h5>
-                    	<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                	</div>
+						<h5 class="modal-title">マイデータを編集</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+					</div>
 
-                	<div class="modal-body">
+					<div class="modal-body">
 
-                    	<!-- ⭐ 星評価（そのまま利用） -->
-                    	<label class="form-label">星評価</label>
+						<!-- ⭐ 星評価（そのまま利用） -->
+						<label class="form-label">星評価</label>
 						<div class="star-rating mb-4" id="modalStarRating">
-                        	<span class="star" data-value="1">★</span>
-                        	<span class="star" data-value="2">★</span>
-                        	<span class="star" data-value="3">★</span>
-                        	<span class="star" data-value="4">★</span>
-                        	<span class="star" data-value="5">★</span>
-                    	</div>
-                    	<input type="hidden" name="rating" id="modalRatingValue" th:value="${book.rating != null ? book.rating : 0}">
+							<span class="star" data-value="1">★</span>
+							<span class="star" data-value="2">★</span>
+							<span class="star" data-value="3">★</span>
+							<span class="star" data-value="4">★</span>
+							<span class="star" data-value="5">★</span>
+						</div>
+						<input type="hidden" name="rating" id="modalRatingValue"
+							th:value="${book.rating != null ? book.rating : 0}">
 
-                    	<!-- 読書ステータス(初期表示実装済) -->
-                    	<label class="form-label">読書ステータス</label>
-                    	<select name="status" class="form-select mb-3">
-                        	<option value="WANT_TO_READ"
-							th:selected="${book.status?.name() == 'WANT_TO_READ'}">
-							読みたい
+						<!-- 読書ステータス(初期表示実装済) -->
+						<label class="form-label">読書ステータス</label>
+						<select name="status" class="form-select mb-3">
+							<option value="WANT_TO_READ" th:selected="${book.status?.name() == 'WANT_TO_READ'}">
+								読みたい
 							</option>
-							
-                        	<option value="UNREAD"
-							th:selected="${book.status?.name() == 'UNREAD'}">
-							未読
+
+							<option value="UNREAD" th:selected="${book.status?.name() == 'UNREAD'}">
+								未読
 							</option>
-                        	
-							<option value="READING"
-							th:selected="${book.status?.name() == 'READING'}">
-							読書中
+
+							<option value="READING" th:selected="${book.status?.name() == 'READING'}">
+								読書中
 							</option>
-                        	
-							<option value="READ"
-							th:selected="${book.status?.name() == 'READ'}">
-							既読
+
+							<option value="READ" th:selected="${book.status?.name() == 'READ'}">
+								既読
 							</option>
-							
-                        	<option value="NONE"
-							th:selected="${book.status?.name() == 'NONE'}">
-							未指定
+
+							<option value="NONE" th:selected="${book.status?.name() == 'NONE'}">
+								未指定
 							</option>
-							
-                    	</select>
 
-                    	<!-- メモ -->
-                    	<label class="form-label">メモ</label>
-                    	<textarea name="memo" class="form-control" rows="4"
-							th:text="${book.memo}"></textarea>
+						</select>
 
-                	</div>
+						<!-- メモ -->
+						<label class="form-label">メモ</label>
+						<textarea name="memo" class="form-control" rows="4" th:text="${book.memo}"></textarea>
 
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">保存</button>
-                    <button class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
-                </div>
+					</div>
 
-			</form>
-          </div>
-        </div>
-    </div>
-    <!-- ▲▲▲ モーダルここまで ▲▲▲ -->
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-primary">保存</button>
+						<button class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+					</div>
 
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- ▲▲▲ モーダルここまで ▲▲▲ -->
 
 
-    <!-- 星評価用スクリプト(ページ上 + モーダル両方対応) -->
-    <script>
-        function initStarRating(containerId, hiddenId) {
-            const stars = document.querySelectorAll(`#${containerId} .star`);
-            const ratingValue = document.getElementById(hiddenId);
-			
-			if(!stars.length || !ratingValue) return;
-			
+
+	<!-- 星評価用スクリプト(ページ上 + モーダル両方対応) -->
+	<script>
+		function initStarRating(containerId, hiddenId) {
+			const stars = document.querySelectorAll(`#${containerId} .star`);
+			const ratingValue = document.getElementById(hiddenId);
+
+			if (!stars.length || !ratingValue) return;
+
 			// 初期表示
 			const currentRating = parseInt(ratingValue.value || 0);
-			    stars.forEach((star, index) => {
-			        if (index < currentRating) {
-			            star.classList.add('selected');
-			        }
-			    });
+			stars.forEach((star, index) => {
+				if (index < currentRating) {
+					star.classList.add('selected');
+				}
+			});
 
-			    stars.forEach((star, index) => {
-			        star.addEventListener('click', () => {
-			            const rating = index + 1;
-			            ratingValue.value = rating;
+			stars.forEach((star, index) => {
+				star.addEventListener('click', () => {
+					const rating = index + 1;
+					ratingValue.value = rating;
 
-			            stars.forEach((s, i) => {
-			                s.classList.toggle('selected', i < rating);
-			            });
-			        });
-			    });
-			}
+					stars.forEach((s, i) => {
+						s.classList.toggle('selected', i < rating);
+					});
+				});
+			});
+		}
 
-			// ページ上
-			initStarRating('starRating', 'ratingValue');
+		// ページ上
+		initStarRating('starRating', 'ratingValue');
 
-			// モーダル
-			initStarRating('modalStarRating', 'modalRatingValue');
-    </script>
+		// モーダル
+		initStarRating('modalStarRating', 'modalRatingValue');
+	</script>
 
 </body>
+
 </html>

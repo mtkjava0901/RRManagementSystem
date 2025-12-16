@@ -20,6 +20,10 @@
 			<div th:if="${loginMessage != null}" class="alert alert-success">
 				<span th:text="${loginMessage}"></span>
 			</div>
+			
+			<!-- ▼ サクセスメッセージ ▼ -->
+			<div th:if="${successMessage}" class="alert alert-success"
+			     th:text="${successMessage}"></div>
 
 			<form th:action="@{/login}" th:object="${loginForm}" method="post">
 

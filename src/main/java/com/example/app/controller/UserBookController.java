@@ -4,7 +4,6 @@ import java.util.List;
 
 import jakarta.servlet.http.HttpSession;
 
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -78,32 +77,24 @@ public class UserBookController {
 		if (userId == null)
 			return "redirect:/login";
 
-		try {
+		// 本棚重複確認
+		if (userBookService.exists(userId, bookId)) {
+			ra.addFlashAttribute("errorMessage", "その本は既に本棚へ追加されています");
+
+			// 重複されていなければ本棚に追加
+		} else {
 			userBookService.add(userId, bookId);
-
 			ra.addFlashAttribute("successMessage", "本棚に追加しました");
-
-			// クエリパラメータ(自動URLエンコード)
-			ra.addAttribute("doSearch", 1);
-			ra.addAttribute("keyword", keyword);
-			ra.addAttribute("genreId", genreId);
-			ra.addAttribute("sort", sort);
-			ra.addAttribute("page", page);
-
-			return "redirect:/book/search";
-
-		} catch (DuplicateKeyException e) {
-			ra.addFlashAttribute(
-					"errorMessage", e.getMessage());
-
-			ra.addAttribute("doSearch", 1);
-			ra.addAttribute("keyword", keyword);
-			ra.addAttribute("genreId", genreId);
-			ra.addAttribute("sort", sort);
-			ra.addAttribute("page", page);
-
-			return "redirect:/book/search";
 		}
+
+		// クエリパラメータ(自動URLエンコード)
+		ra.addAttribute("doSearch", 1);
+		ra.addAttribute("keyword", keyword);
+		ra.addAttribute("genreId", genreId);
+		ra.addAttribute("sort", sort);
+		ra.addAttribute("page", page);
+
+		return "redirect:/book/search";
 	}
 
 	// 書籍詳細
@@ -123,7 +114,12 @@ public class UserBookController {
 			return "redirect:/book/list";
 		}
 
+		// List<Review> reviews = bookService.findReviewsByBookId(id); // レビュー用
 		model.addAttribute("book", ub);
+
+		// PaginatedResult<UserBook> addedBooks = userBookService.search(userId, null, null, null, 1);
+		// model.addAttribute("addedBooks", addedBooks);
+
 		return "book/detail";
 	}
 

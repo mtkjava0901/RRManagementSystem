@@ -34,9 +34,9 @@
         </a>
 
         <!-- 本棚から外すボタン -->
-        <form th:action="@{/book/remove(id=${ub.id})}" method="post" class="mt-1">
+        <form th:action="@{/book/remove(id=${ub.id})}" method="post" class="remove-form mt-1">
             <button type="submit"
-                    class="btn btn-sm btn-outline-danger d-block text-start">
+                    class="btn btn-sm btn-outline-danger remove-btn d-block text-start">
                 本棚から外す
             </button>
         </form>

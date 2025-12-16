@@ -15,7 +15,10 @@ public interface UserBookService {
 	List<UserBook> getByUserId(Integer userId);
 
 	// 登録
-	public int add(Integer userId, Integer bookId);
+	int add(Integer userId, Integer bookId);
+	
+	// 重複登録チェック
+	boolean exists(Integer userId, Integer bookId);
 
 	// 更新
 	int update(Integer id, Integer rating, ReadingStatus status, String memo);

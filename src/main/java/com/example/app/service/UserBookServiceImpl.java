@@ -51,12 +51,6 @@ public class UserBookServiceImpl implements UserBookService {
 			throw new RuntimeException("不正なアクセスです。");
 		}
 
-		// 既に有効な本棚データがある
-		UserBook active = userBookMapper.selectActive(userId, bookId);
-		if (active != null) {
-			return 0; // 何もしないor例外
-		}
-
 		// 論理削除済みがある→復活
 		UserBook deleted = userBookMapper.selectDeleted(userId, bookId);
 		if (deleted != null) {
@@ -75,6 +69,13 @@ public class UserBookServiceImpl implements UserBookService {
 		ub.setIsDeleted(false);
 
 		return userBookMapper.insert(ub);
+	}
+	
+	// 重複登録チェック
+	@Override
+	public boolean exists(Integer userId, Integer bookId) {
+		UserBook active = userBookMapper.selectActive(userId, bookId);
+    return active != null;
 	}
 
 	// 更新
@@ -123,7 +124,10 @@ public class UserBookServiceImpl implements UserBookService {
 			int page) {
 
 		final int PAGE_SIZE = 10;
-		int offset = (page - 1) * PAGE_SIZE;
+		
+		// pageが1未満なら1に補正
+		int safePage = Math.max(page, 1);
+		int offset = (safePage - 1) * PAGE_SIZE;
 
 		// 件数取得
 		int totalCount = userBookMapper.countSearch(userId, status, keyword);
@@ -132,7 +136,7 @@ public class UserBookServiceImpl implements UserBookService {
 		// データ取得
 		List<UserBook> list = userBookMapper.search(userId, sort, status, keyword, offset, PAGE_SIZE);
 
-		return new PaginatedResult<>(list, totalCount, totalPages, page);
+		return new PaginatedResult<>(list, totalCount, totalPages, safePage);
 	}
 
 	// SEARCH登録
