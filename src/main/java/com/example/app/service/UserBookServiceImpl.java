@@ -70,12 +70,12 @@ public class UserBookServiceImpl implements UserBookService {
 
 		return userBookMapper.insert(ub);
 	}
-	
+
 	// 重複登録チェック
 	@Override
 	public boolean exists(Integer userId, Integer bookId) {
 		UserBook active = userBookMapper.selectActive(userId, bookId);
-    return active != null;
+		return active != null;
 	}
 
 	// 更新
@@ -124,7 +124,7 @@ public class UserBookServiceImpl implements UserBookService {
 			int page) {
 
 		final int PAGE_SIZE = 10;
-		
+
 		// pageが1未満なら1に補正
 		int safePage = Math.max(page, 1);
 		int offset = (safePage - 1) * PAGE_SIZE;

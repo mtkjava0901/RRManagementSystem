@@ -16,7 +16,7 @@ public interface UserBookService {
 
 	// 登録
 	int add(Integer userId, Integer bookId);
-	
+
 	// 重複登録チェック
 	boolean exists(Integer userId, Integer bookId);
 

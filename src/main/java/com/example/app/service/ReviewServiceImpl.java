@@ -7,7 +7,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.app.domain.Review;
 import com.example.app.domain.ReviewForm;
+import com.example.app.domain.UserBook;
+import com.example.app.enums.BookSource;
 import com.example.app.mapper.ReviewMapper;
+import com.example.app.mapper.UserBookMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class ReviewServiceImpl implements ReviewService {
 
 	private final ReviewMapper reviewMapper;
+	private final UserBookMapper userBookMapper;
 
 	// レビュー投稿
 	@Override
@@ -25,6 +29,13 @@ public class ReviewServiceImpl implements ReviewService {
 		// 既存レビューがあるか確認
 		if (existsUserReview(userId, form.getBookId())) {
 			throw new IllegalArgumentException("この書籍にはすでにレビュー済みです。");
+		}
+
+		// 手動登録はレビュー拒否
+		UserBook userBook = userBookMapper.selectActive(userId, form.getBookId());
+
+		if (userBook == null) {
+			throw new IllegalArgumentException("手動登録した書籍はレビューできません");
 		}
 
 		Review review = new Review();
@@ -61,4 +72,17 @@ public class ReviewServiceImpl implements ReviewService {
 		return reviewMapper.selectByUserAndBook(userId, bookId) != null;
 	}
 
+	// ユーザー登録か否か判定
+	@Override
+	public boolean isReviewable(Integer userId, Integer bookId) {
+
+		UserBook userBook = userBookMapper.selectActive(userId, bookId);
+
+		if (userBook == null) {
+			// 本棚に存在しないor削除済み
+			return false;
+		}
+		return BookSource.MANUAL != userBook.getSource();
+
+	}
 }

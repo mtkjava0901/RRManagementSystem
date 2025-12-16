@@ -22,4 +22,7 @@ public interface ReviewService {
 	// ユーザーが書籍に既にレビューしているか
 	boolean existsUserReview(Integer userId, Integer bookId);
 
+	// ユーザー登録か否か判定
+	boolean isReviewable(Integer userId, Integer bookId);
+
 }

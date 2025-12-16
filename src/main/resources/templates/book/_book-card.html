@@ -26,8 +26,9 @@
 
 
 		<!-- レビューボタン -->
-		<a href="/book/review/add" class="btn btn-sm btn-primary" style="width: auto;">
-			この本のレビューを書く
+		<a th:href="@{/book/review/add(bookId=${ub.book.id})}"
+		   class="btn btn-sm btn-primary" style="width: auto;">
+		    この本のレビューを書く
 		</a>
 
 		<!-- 本棚から外すボタン -->
