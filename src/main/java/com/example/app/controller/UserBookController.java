@@ -17,6 +17,7 @@ import com.example.app.domain.User;
 import com.example.app.domain.UserBook;
 import com.example.app.enums.ReadingStatus;
 import com.example.app.service.PaginatedResult;
+import com.example.app.service.ReviewService;
 import com.example.app.service.UserBookService;
 
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 public class UserBookController {
 
 	private final UserBookService userBookService;
+	private final ReviewService reviewService;
 	private final HttpSession session;
 
 	// ログイン中はユーザーIDを取得
@@ -120,15 +122,18 @@ public class UserBookController {
 			model.addAttribute("username", user.getName());
 		}
 
-		UserBook ub = userBookService.getById(id);
+		UserBook ub = userBookService.getActiveById(id);
 
 		// 不正アクセス防止
 		if (ub == null || !ub.getUserId().equals(userId)) {
 			return "redirect:/book/list";
 		}
+		
+		// レビュー可能判定
+		boolean reviewable = reviewService.isReviewable(ub);
 
-		// List<Review> reviews = bookService.findReviewsByBookId(id); // レビュー用
 		model.addAttribute("book", ub);
+		model.addAttribute("reviewable", reviewable);
 
 		return "book/detail";
 	}
@@ -145,7 +150,7 @@ public class UserBookController {
 		if (userId == null)
 			return "redirect:/login";
 
-		UserBook ub = userBookService.getById(id);
+		UserBook ub = userBookService.getActiveById(id);
 		if (ub == null || !ub.getUserId().equals(userId)) {
 			return "redirect:/book/list";
 		}

@@ -11,11 +11,14 @@ import com.example.app.enums.ReadingStatus;
 @Mapper
 public interface UserBookMapper {
 
-	// 1件取得
-	UserBook selectById(@Param("id") Integer id);
+	// 1件取得(アクティブID(画面専用)/is_deleted=0)
+	UserBook selectActiveById(@Param("id") Integer id);
+	
+	// 1件取得(管理用途/is_deleted無し)
+	UserBook selectAnyById(@Param("id") Integer id);
 
-	// ユーザー本棚一覧取得
-	List<UserBook> selectByUserId(@Param("userId") Integer userId);
+	// ユーザー本棚一覧取得(画面用)
+	List<UserBook> selectActiveByUserId(@Param("userId") Integer userId);
 
 	// 新規登録(UserId, BookId, Status, Rating, Memo)
 	int insert(UserBook userBook);
@@ -65,7 +68,7 @@ public interface UserBookMapper {
 	List<UserBook> selectManualBooksByUser(Integer userId);
 
 	// 重複追加回避
-	// int exists(@Param("userId") Integer userId, @Param("bookId") Integer bookId);
+	int exists(@Param("userId") Integer userId, @Param("bookId") Integer bookId);
 
 	// 論理削除含め存在チェック
 	// int existsAll(

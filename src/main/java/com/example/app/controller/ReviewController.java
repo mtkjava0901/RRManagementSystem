@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.app.domain.Review;
 import com.example.app.domain.ReviewForm;
 import com.example.app.domain.User;
+import com.example.app.domain.UserBook;
 import com.example.app.service.ReviewService;
 
 import lombok.RequiredArgsConstructor;
@@ -35,7 +36,7 @@ public class ReviewController {
 	// レビュー投稿ページ表示
 	@GetMapping("/add")
 	public String showAddForm(
-			@RequestParam Integer bookId,
+			@RequestParam("bookId") Integer bookId,
 			@SessionAttribute(value = "user", required = false) User user, // null警告回避
 			RedirectAttributes ra,
 			Model model) {
@@ -43,55 +44,71 @@ public class ReviewController {
 		if (user == null) {
 			return "redirect:/login";
 		}
-
-		model.addAttribute("username", user.getName());
+		
 		Integer userId = user.getId();
+		UserBook ub = reviewService.findReviewableUserBook(userId, bookId);
+
+		if (ub == null) {
+			ra.addFlashAttribute("errorMessage", "この書籍は本棚に追加されていません。先に本棚に追加してください。");
+			return "redirect:/book/list";
+		}
 
 		// レビュー可能か判定
-		if (!reviewService.isReviewable(userId, bookId)) {
+		if (!reviewService.isReviewable(ub)) {
 			ra.addFlashAttribute(
 					"errorMessage",
 					"手動登録した書籍はレビューできません");
-			return "redirect:/book/detail?bookId=" + bookId;
+			return "redirect:/book/detail/" + ub.getId();
 		}
 
 		ReviewForm form = new ReviewForm();
-		form.setBookId(bookId);
+		form.setUserBookId(ub.getId());
+		form.setBookId(ub.getBook().getId());
 		model.addAttribute("reviewForm", form);
+		model.addAttribute("username", user.getName());
 
 		return "book/review/add";
 	}
 
-	// レビュー投稿ページ
+	// レビュー投稿
 	@PostMapping("/add")
 	public String addReview(
 			@Valid @ModelAttribute("reviewForm") ReviewForm form,
 			@SessionAttribute(value = "user", required = false) User user,
 			BindingResult bindingResult,
-			RedirectAttributes ra) {
+			RedirectAttributes ra,
+			Model model) {
 
 		if (user == null) {
 			return "redirect:/login";
 		}
 
-		// ログインユーザーIDを取得
 		Integer userId = user.getId();
+		Integer userBookId = form.getUserBookId();
 
-		// レビュー可能か判定
-		if (!reviewService.isReviewable(userId, form.getBookId())) {
+		// UserBookを取得(null/違うユーザーならリダイレクト)
+		UserBook ub = reviewService.findReviewableUserBookByUserBookId(userId, form.getUserBookId());
+		if (ub == null || !ub.getUserId().equals(userId)) {
+			return "redirect:/book/list";
+		}
+
+		// レビュー可能か判定(MANUAL不可)
+		if (!reviewService.isReviewable(ub)) {
 			ra.addFlashAttribute(
 					"errorMessage",
 					"手動登録した書籍はレビューできません");
-			return "redirect:/book/detail?bookId=" + form.getBookId();
+			return "redirect:/book/detail/" + userBookId;
 		}
 
+		// バリデーションエラー
 		if (bindingResult.hasErrors()) {
+			model.addAttribute("username", user.getName());
 			return "book/review/add";
 		}
 
 		reviewService.addReview(userId, form);
 
-		return "redirect:/book/review/detail-list?bookId=" + form.getBookId();
+		return "redirect:/book/review/detail-list?bookId=" + ub.getBookId();
 	}
 
 	// 全レビュー新着タイムライン

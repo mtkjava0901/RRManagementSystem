@@ -11,8 +11,10 @@ import lombok.Data;
 public class ReviewForm {
 	
 	// レビューフォームのバリデーション用ドメイン
+		
+	@NotNull(message="{review.userBookId.NotNull}")
+	private Integer userBookId;
 	
-	@NotNull(message="{review.bookId.NotNull}")
 	private Integer bookId;
 	
 	@Min(1)

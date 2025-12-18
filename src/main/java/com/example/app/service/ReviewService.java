@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.example.app.domain.Review;
 import com.example.app.domain.ReviewForm;
+import com.example.app.domain.UserBook;
 
 public interface ReviewService {
 
@@ -22,7 +23,16 @@ public interface ReviewService {
 	// ユーザーが書籍に既にレビューしているか
 	boolean existsUserReview(Integer userId, Integer bookId);
 
-	// ユーザー登録か否か判定
-	boolean isReviewable(Integer userId, Integer bookId);
+	// ユーザー登録か否か判定(userId,bookId)
+	boolean isReviewable(Integer userId, Integer userBookId);
+	
+	// ユーザー登録か否か判定(UserBook)
+	boolean isReviewable(UserBook userBook);
+	
+	// レビュー可能なUserBookを見つける
+	UserBook findReviewableUserBook(Integer userId, Integer bookId);
+	
+	// UserBookIdでレビュー可能なユーザーブックを見つける
+	UserBook findReviewableUserBookByUserBookId(Integer userId, Integer userBookId);
 
 }

@@ -26,21 +26,29 @@ public class ReviewServiceImpl implements ReviewService {
 	@Override
 	public Review addReview(Integer userId, ReviewForm form) {
 
-		// 既存レビューがあるか確認
-		if (existsUserReview(userId, form.getBookId())) {
-			throw new IllegalArgumentException("この書籍にはすでにレビュー済みです。");
+		Integer userBookId = form.getUserBookId();
+
+		// UserBook 取得
+		UserBook userBook = userBookMapper.selectActiveById(userBookId);
+
+		// null/ユーザーが違う場合
+		if (userBook == null || !userBook.getUserId().equals(userId)) {
+			throw new IllegalArgumentException("不正な操作です");
 		}
 
-		// 手動登録はレビュー拒否
-		UserBook userBook = userBookMapper.selectActive(userId, form.getBookId());
-
-		if (userBook == null) {
+		// 手動登録はレビュー不可
+		if (userBook.getSource() == BookSource.MANUAL) {
 			throw new IllegalArgumentException("手動登録した書籍はレビューできません");
+		}
+
+		// 既存レビュー確認（bookId で判定）
+		if (existsUserReview(userId, userBook.getBookId())) {
+			throw new IllegalArgumentException("この書籍にはすでにレビュー済みです。");
 		}
 
 		Review review = new Review();
 		review.setUserId(userId);
-		review.setBookId(form.getBookId());
+		review.setBookId(form.getUserBookId());
 		review.setRating(form.getRating());
 		review.setComment(form.getComment());
 
@@ -72,17 +80,57 @@ public class ReviewServiceImpl implements ReviewService {
 		return reviewMapper.selectByUserAndBook(userId, bookId) != null;
 	}
 
+	// ユーザー登録か否か判定(橋渡しメソッド)
+	@Override
+	public boolean isReviewable(Integer userId, Integer userBookId) {
+		UserBook userBook = userBookMapper.selectActiveById(userBookId);
+		return isReviewable(userBook);
+	}
+
 	// ユーザー登録か否か判定
 	@Override
-	public boolean isReviewable(Integer userId, Integer bookId) {
-
-		UserBook userBook = userBookMapper.selectActive(userId, bookId);
+	public boolean isReviewable(UserBook userBook) {
 
 		if (userBook == null) {
 			// 本棚に存在しないor削除済み
 			return false;
 		}
-		return BookSource.MANUAL != userBook.getSource();
+		return userBook.getSource() != BookSource.MANUAL;
 
 	}
+
+	// レビュー可能なUserBookを見つける(この書籍に対して、レビュー投稿画面を出していいか？/bookId起点)
+	@Override
+	public UserBook findReviewableUserBook(Integer userId, Integer bookId) {
+
+		UserBook ub = userBookMapper.selectActive(userId, bookId);
+
+		if (ub == null) {
+			return null;
+		}
+
+		if (ub.getSource() == BookSource.MANUAL) {
+			return null;
+		}
+
+		return ub;
+	}
+
+	// UserBookIdでレビュー可能なユーザーブックを見つける(「POST(レビュー登録)」用/userBookId起点)
+	@Override
+	public UserBook findReviewableUserBookByUserBookId(Integer userId, Integer userBookId) {
+
+		UserBook ub = userBookMapper.selectActiveById(userBookId);
+
+		if (ub == null || !ub.getUserId().equals(userId)) {
+			return null;
+		}
+
+		if (ub.getSource() == BookSource.MANUAL) {
+			return null;
+		}
+
+		return ub;
+	}
+
 }
