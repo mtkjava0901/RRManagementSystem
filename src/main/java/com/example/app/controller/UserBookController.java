@@ -72,6 +72,37 @@ public class UserBookController {
 		return "book/list";
 	}
 
+	// 書籍詳細
+	@GetMapping("/detail/{id}")
+	public String bookDetail(
+			@PathVariable Integer id,
+			Model model) {
+
+		Integer userId = getLoginUserId();
+		if (userId == null)
+			return "redirect:/login";
+
+		// セッションからユーザー取得
+		User user = (User) session.getAttribute("user");
+		if (user != null) {
+			model.addAttribute("username", user.getName());
+		}
+
+		UserBook ub = userBookService.getAnyById(id); // 本棚表示用(レビュー可否は別)
+		model.addAttribute("book", ub);
+
+		// 不正アクセス防止
+		if (ub == null || !ub.getUserId().equals(userId)) {
+			return "redirect:/book/list";
+		}
+
+		// レビュー可能判定
+		boolean reviewable = reviewService.isReviewable(ub);
+		model.addAttribute("reviewable", reviewable);
+
+		return "book/detail";
+	}
+
 	// 本棚への追加（redirect後も同条件で再検索）
 	@PostMapping("/add-booklist")
 	public String addBookList(
@@ -104,38 +135,6 @@ public class UserBookController {
 		ra.addAttribute("page", page);
 
 		return "redirect:/book/search";
-	}
-
-	// 書籍詳細
-	@GetMapping("/detail/{id}")
-	public String bookDetail(
-			@PathVariable Integer id,
-			Model model) {
-
-		Integer userId = getLoginUserId();
-		if (userId == null)
-			return "redirect:/login";
-
-		// セッションからユーザー取得
-		User user = (User) session.getAttribute("user");
-		if (user != null) {
-			model.addAttribute("username", user.getName());
-		}
-
-		UserBook ub = userBookService.getActiveById(id);
-
-		// 不正アクセス防止
-		if (ub == null || !ub.getUserId().equals(userId)) {
-			return "redirect:/book/list";
-		}
-		
-		// レビュー可能判定
-		boolean reviewable = reviewService.isReviewable(ub);
-
-		model.addAttribute("book", ub);
-		model.addAttribute("reviewable", reviewable);
-
-		return "book/detail";
 	}
 
 	// 書籍更新処理

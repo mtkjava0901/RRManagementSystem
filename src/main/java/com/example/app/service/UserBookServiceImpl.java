@@ -33,7 +33,6 @@ public class UserBookServiceImpl implements UserBookService {
 	}
 
 	// 1件取得(アクティブID(画面専用)/is_deleted=0)
-	// ※Controllerでは使わない
 	@Override
 	public UserBook getActiveById(Integer userBookId) {
 		return userBookMapper.selectActiveById(userBookId);
