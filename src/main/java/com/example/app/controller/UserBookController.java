@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.app.domain.Book;
 import com.example.app.domain.User;
 import com.example.app.domain.UserBook;
 import com.example.app.enums.ReadingStatus;
+import com.example.app.service.BookService;
 import com.example.app.service.PaginatedResult;
 import com.example.app.service.ReviewService;
 import com.example.app.service.UserBookService;
@@ -27,6 +29,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserBookController {
 
+	private final BookService bookService;
 	private final UserBookService userBookService;
 	private final ReviewService reviewService;
 	private final HttpSession session;
@@ -88,19 +91,23 @@ public class UserBookController {
 			model.addAttribute("username", user.getName());
 		}
 
-		UserBook ub = userBookService.getAnyById(id); // 本棚表示用(レビュー可否は別)
-		model.addAttribute("book", ub);
+		Book book = bookService.selectById(id); // id=BookId
+		if (book == null)
+			return "redirect:/book/list"; // 本が存在しない場合もリダイレクト
+		model.addAttribute("book", book);
 
-		// 不正アクセス防止
-		if (ub == null || !ub.getUserId().equals(userId)) {
-			return "redirect:/book/list";
-		}
+		// レビュー可能判定(UserBookが存在 & manual=1)
+		UserBook ub = reviewService.findReviewableUserBook(userId, id); // id=BookId
+		if (ub == null)
+			return "redirect:/book/list"; // 本棚にない場合はリダイレクト
+		model.addAttribute("userBook", ub);
 
-		// レビュー可能判定
-		boolean reviewable = reviewService.isReviewable(ub);
+		// boolean reviewable = reviewService.isReviewable(ub); // 使わない
+		boolean reviewable = (ub != null && book.getManual());
 		model.addAttribute("reviewable", reviewable);
 
 		return "book/detail";
+
 	}
 
 	// 本棚への追加（redirect後も同条件で再検索）

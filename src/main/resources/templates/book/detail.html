@@ -116,17 +116,17 @@
 
 				<!-- ★ 以下はそのままのレイアウトで固定表示にする（入力欄はモーダルに移動） -->
 				<p>星評価：
-					<span th:if="${book.rating != null}">
-						<span th:each="i : ${#numbers.sequence(1, book.rating)}">★</span>
+					<span th:if="${userBook.rating != null}">
+						<span th:each="i : ${#numbers.sequence(1, userBook.rating)}">★</span>
 					</span>
 				</p>
 
 				<p>読書ステータス：
-					<span th:text="${book.status.label}"></span>
+					<span th:text="${userBook.status.label}"></span>
 				</p>
 
 				<p>メモ：
-					<span th:text="${book.memo} ?: '（未入力）'"></span>
+					<span th:text="${userBook.memo} ?: '（未入力）'"></span>
 				</p>
 
 				<!--<p>星評価：★★★★★（例）</p>-->
@@ -140,6 +140,8 @@
 
 				<div class="d-flex justify-content-between align-items-center mb-3">
 					<h4 class="m-0">レビュー一覧</h4>
+					
+					<!-- レビューボタン -->
 					<a th:if="${reviewable}"
 						th:href="@{/book/review/add(bookId=${book.id})}"
 						class="btn btn-primary">
@@ -195,27 +197,28 @@
 				<div class="card p-3">
 					<div class="row mb-2">
 						<div class="col-4 fw-bold">書籍名</div>
-						<div class="col-8" th:text="${book.book.title}">書籍名</div>
+						<div class="col-8" th:text="${book.title}">書籍名</div>
 					</div>
 
 					<div class="row mb-2">
 						<div class="col-4 fw-bold">著者</div>
-						<div class="col-8" th:text="${book.book.author}">著者</div>
+						<div class="col-8" th:text="${book.author}">著者</div>
 					</div>
 
 					<div class="row mb-2">
 						<div class="col-4 fw-bold">出版社</div>
-						<div class="col-8" th:text="${book.book.publisher}">出版社</div>
+						<div class="col-8" th:text="${book.publisher}">出版社</div>
 					</div>
 
 					<div class="row mb-2">
 						<div class="col-4 fw-bold">発行日</div>
-						<div class="col-8" th:text="${#temporals.format(book.book.publisherAt, 'yyyy/MM/dd')}">発行日</div>
+						<div class="col-8"
+							th:text="${#temporals.format(book.publisherAt, 'yyyy/MM/dd')}">発行日</div>
 					</div>
 
 					<div class="row mb-2">
 						<div class="col-4 fw-bold">ジャンル</div>
-						<div class="col-8" th:text="${book.book.bookGenre.name}">ジャンル</div>
+						<div class="col-8" th:text="${book.bookGenre.name}">ジャンル</div>
 					</div>
 				</div>
 			</div>
@@ -266,28 +269,28 @@
 							<span class="star" data-value="5">★</span>
 						</div>
 						<input type="hidden" name="rating" id="modalRatingValue"
-							th:value="${book.rating != null ? book.rating : 0}">
+							th:value="${userBook.rating != null ? userBook.rating : 0}">
 
 						<!-- 読書ステータス(初期表示実装済) -->
 						<label class="form-label">読書ステータス</label>
 						<select name="status" class="form-select mb-3">
-							<option value="WANT_TO_READ" th:selected="${book.status?.name() == 'WANT_TO_READ'}">
+							<option value="WANT_TO_READ" th:selected="${userBook.status?.name() == 'WANT_TO_READ'}">
 								読みたい
 							</option>
 
-							<option value="UNREAD" th:selected="${book.status?.name() == 'UNREAD'}">
+							<option value="UNREAD" th:selected="${userBook.status?.name() == 'UNREAD'}">
 								未読
 							</option>
 
-							<option value="READING" th:selected="${book.status?.name() == 'READING'}">
+							<option value="READING" th:selected="${userBook.status?.name() == 'READING'}">
 								読書中
 							</option>
 
-							<option value="READ" th:selected="${book.status?.name() == 'READ'}">
+							<option value="READ" th:selected="${userBook.status?.name() == 'READ'}">
 								既読
 							</option>
 
-							<option value="NONE" th:selected="${book.status?.name() == 'NONE'}">
+							<option value="NONE" th:selected="${userBook.status?.name() == 'NONE'}">
 								未指定
 							</option>
 
@@ -295,7 +298,7 @@
 
 						<!-- メモ -->
 						<label class="form-label">メモ</label>
-						<textarea name="memo" class="form-control" rows="4" th:text="${book.memo}"></textarea>
+						<textarea name="memo" class="form-control" rows="4" th:text="${userBook.memo}"></textarea>
 
 					</div>
 

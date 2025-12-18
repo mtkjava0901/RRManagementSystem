@@ -22,6 +22,27 @@
 
 	</resultMap>
 
+	<!-- 書籍詳細 -->
+	<select id="selectById" parameterType="int"
+		resultMap="BookResultMap">
+		SELECT
+		b.id,
+		b.title,
+		b.author,
+		b.publisher,
+		b.publisher_at,
+		b.created_at,
+		b.updated_at,
+		b.status,
+		b.manual,
+		g.id AS genre_id,
+		g.name AS genre_name
+		FROM books b
+		LEFT JOIN book_genres g ON b.genre = g.id
+		WHERE b.id = #{id}
+		AND b.status = 'ACT'
+	</select>
+
 	<!-- 検索 + ソート + ページング -->
 	<select id="findBySearch" parameterType="map"
 		resultMap="BookResultMap">

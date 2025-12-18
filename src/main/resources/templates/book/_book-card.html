@@ -1,5 +1,5 @@
 <div th:fragment="bookCard(ub)">
-	<div class="book-card p-3 clickable-card" th:attr="data-href=@{/book/detail/{id}(id=${ub.id})}">
+	<div class="book-card p-3 clickable-card" th:attr="data-href=@{/book/detail/{id}(id=${ub.book.id})}">
 
 		<!-- タイトル -->
 		<div class="book-title mb-1" th:text="${ub.book.title}"></div>
