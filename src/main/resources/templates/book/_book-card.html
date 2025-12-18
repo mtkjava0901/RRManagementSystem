@@ -26,8 +26,9 @@
 
 
 		<!-- レビューボタン -->
-		<a th:href="@{/book/review/add(bookId=${ub.book.id})}"
-		   class="btn btn-sm btn-primary" style="width: auto;">
+		<a th:if="${ub.book.manual}"
+			th:href="@{/book/review/add(bookId=${ub.book.id})}"
+		   	class="btn btn-sm btn-primary" style="width: auto;">
 		    この本のレビューを書く
 		</a>
 
