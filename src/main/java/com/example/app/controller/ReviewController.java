@@ -44,7 +44,7 @@ public class ReviewController {
 		if (user == null) {
 			return "redirect:/login";
 		}
-		
+
 		Integer userId = user.getId();
 		UserBook ub = reviewService.findReviewableUserBook(userId, bookId);
 

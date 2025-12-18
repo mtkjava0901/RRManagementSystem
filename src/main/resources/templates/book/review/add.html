@@ -75,7 +75,8 @@
 				<p th:each="err : ${#fields.globalErrors}" th:text="${err}"></p>
 			</div>
 
-			<!-- hiddenでbookIdを送信 -->
+			<!-- hidden input :userBookId,bookId -->
+			<input type="hidden" th:field="*{userBookId}" />
 			<input type="hidden" th:field="*{bookId}" />
 
 			<!-- 星採点 -->
