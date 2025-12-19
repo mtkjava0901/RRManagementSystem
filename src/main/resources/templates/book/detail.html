@@ -140,11 +140,9 @@
 
 				<div class="d-flex justify-content-between align-items-center mb-3">
 					<h4 class="m-0">レビュー一覧</h4>
-					
+
 					<!-- レビューボタン -->
-					<a th:if="${reviewable}"
-						th:href="@{/book/review/add(bookId=${book.id})}"
-						class="btn btn-primary">
+					<a th:if="${reviewable}" th:href="@{/book/review/add(bookId=${book.id})}" class="btn btn-primary">
 						レビューを書く
 					</a>
 				</div>
@@ -212,8 +210,7 @@
 
 					<div class="row mb-2">
 						<div class="col-4 fw-bold">発行日</div>
-						<div class="col-8"
-							th:text="${#temporals.format(book.publisherAt, 'yyyy/MM/dd')}">発行日</div>
+						<div class="col-8" th:text="${#temporals.format(book.publisherAt, 'yyyy/MM/dd')}">発行日</div>
 					</div>
 
 					<div class="row mb-2">
@@ -247,10 +244,10 @@
 			<div class="modal-content">
 
 				<!-- Form -->
-				<form th:action="@{/book/update}" method="post">
+				<form th:action="@{/book/update}" th:object="${userBook}" method="post">
 
 					<!-- hidden id -->
-					<input type="hidden" name="id" th:value="${book.id}">
+					<input type="hidden" name="id" th:value="${userBook.id}">
 
 					<div class="modal-header">
 						<h5 class="modal-title">マイデータを編集</h5>
@@ -260,46 +257,53 @@
 					<div class="modal-body">
 
 						<!-- ⭐ 星評価（そのまま利用） -->
-						<label class="form-label">星評価</label>
-						<div class="star-rating mb-4" id="modalStarRating">
-							<span class="star" data-value="1">★</span>
-							<span class="star" data-value="2">★</span>
-							<span class="star" data-value="3">★</span>
-							<span class="star" data-value="4">★</span>
-							<span class="star" data-value="5">★</span>
+						<div class="mb-2">
+							<label class="form-label">星評価</label>
+							<div class="star-rating mb-4" id="modalStarRating">
+								<span class="star" data-value="1">★</span>
+								<span class="star" data-value="2">★</span>
+								<span class="star" data-value="3">★</span>
+								<span class="star" data-value="4">★</span>
+								<span class="star" data-value="5">★</span>
+							</div>
+							<input type="hidden" th:field="*{rating}" id="modalRatingValue" th:value="${userBook.rating}">
+							<div th:if="${#fields.hasErrors('rating')}" class="text-danger" th:errors="*{rating}"></div>
 						</div>
-						<input type="hidden" name="rating" id="modalRatingValue"
-							th:value="${userBook.rating != null ? userBook.rating : 0}">
 
 						<!-- 読書ステータス(初期表示実装済) -->
-						<label class="form-label">読書ステータス</label>
-						<select name="status" class="form-select mb-3">
-							<option value="WANT_TO_READ" th:selected="${userBook.status?.name() == 'WANT_TO_READ'}">
-								読みたい
-							</option>
+						<div class="mb-2">
+							<label class="form-label">読書ステータス</label>
+							<select class="form-select mb-3" th:field="*{status}">
+								<option value="WANT_TO_READ" th:selected="${userBook.status?.name() == 'WANT_TO_READ'}">
+									読みたい
+								</option>
 
-							<option value="UNREAD" th:selected="${userBook.status?.name() == 'UNREAD'}">
-								未読
-							</option>
+								<option value="UNREAD" th:selected="${userBook.status?.name() == 'UNREAD'}">
+									未読
+								</option>
 
-							<option value="READING" th:selected="${userBook.status?.name() == 'READING'}">
-								読書中
-							</option>
+								<option value="READING" th:selected="${userBook.status?.name() == 'READING'}">
+									読書中
+								</option>
 
-							<option value="READ" th:selected="${userBook.status?.name() == 'READ'}">
-								既読
-							</option>
+								<option value="READ" th:selected="${userBook.status?.name() == 'READ'}">
+									既読
+								</option>
 
-							<option value="NONE" th:selected="${userBook.status?.name() == 'NONE'}">
-								未指定
-							</option>
+								<option value="NONE" th:selected="${userBook.status?.name() == 'NONE'}">
+									未指定
+								</option>
 
-						</select>
+							</select>
+							<div th:if="${#fields.hasErrors('status')}" class="text-danger" th:errors="*{status}"></div>
+						</div>
 
 						<!-- メモ -->
-						<label class="form-label">メモ</label>
-						<textarea name="memo" class="form-control" rows="4" th:text="${userBook.memo}"></textarea>
-
+						<div class="mb-2">
+							<label class="form-label">メモ</label>
+							<textarea class="form-control" rows="4" th:field="*{memo}" th:text="${userBook.memo}"></textarea>
+							<div th:if="${#fields.hasErrors('memo')}" class="text-danger" th:errors="*{memo}"></div>
+						</div>
 					</div>
 
 					<div class="modal-footer">

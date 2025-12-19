@@ -3,10 +3,13 @@ package com.example.app.controller;
 import java.util.List;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -147,10 +150,14 @@ public class UserBookController {
 	// 書籍更新処理
 	@PostMapping("/update")
 	public String update(
+			@Valid @ModelAttribute("userBook") UserBook userBook,
+			BindingResult br,
 			@RequestParam Integer id,
 			@RequestParam(required = false) Integer rating,
 			@RequestParam ReadingStatus status,
-			@RequestParam String memo) {
+			@RequestParam String memo,
+			RedirectAttributes ra,
+			Model model) {
 
 		Integer userId = getLoginUserId();
 		if (userId == null)
@@ -161,9 +168,22 @@ public class UserBookController {
 			return "redirect:/book/list";
 		}
 
+		// バリデーションエラーの処理
+		if (br.hasErrors()) {
+			model.addAttribute("book", ub.getBook());
+			model.addAttribute("userBook", ub);
+			model.addAttribute("openEditModal", true);
+			return "book/detail";
+		}
+
+		// 更新
 		userBookService.update(id, rating, status, memo);
 
-		return "redirect:/book/detail/" + id;
+		// 成功メッセージ
+		String bookTitle = ub.getBook().getTitle();
+		ra.addFlashAttribute("successMessage", "「" + bookTitle + "」のマイデータ入力が完了しました");
+
+		return "redirect:/book/list";
 	}
 
 	// 書籍削除(論理/物理統合済み)
