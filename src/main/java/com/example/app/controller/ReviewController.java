@@ -1,5 +1,6 @@
 package com.example.app.controller;
 
+import java.util.Collections;
 import java.util.List;
 
 import jakarta.servlet.http.HttpSession;
@@ -130,9 +131,10 @@ public class ReviewController {
 	}
 
 	// レビュー詳細(1件)
+	// ビューのみ実装
 	@GetMapping("/detail")
 	public String reviewDetail(
-			@RequestParam Integer reviewId,
+			@RequestParam(required = false) Integer reviewId,
 			Model model) {
 
 		// セッションからユーザー取得
@@ -141,16 +143,20 @@ public class ReviewController {
 			model.addAttribute("username", user.getName());
 		}
 
-		Review review = reviewService.getReview(reviewId);
-		model.addAttribute("review", review);
+		Review review = null;
+		if (reviewId != null) {
+			review = reviewService.getReview(reviewId);
+		}
 
+		model.addAttribute("review", review);
 		return "book/review/detail";
 	}
 
 	// 書籍ごとのレビュー一覧
+	// ビューのみ実装
 	@GetMapping("/detail-list")
 	public String reviewList(
-			@RequestParam Integer bookId,
+			@RequestParam(required = false) Integer bookId,
 			Model model) {
 
 		// セッションからユーザー取得
@@ -159,9 +165,12 @@ public class ReviewController {
 			model.addAttribute("username", user.getName());
 		}
 
-		List<Review> reviews = reviewService.getReviewsByBook(bookId);
-		model.addAttribute("reviews", reviews);
+		List<Review> reviews = Collections.emptyList();
+		if (bookId != null) {
+			reviews = reviewService.getReviewsByBook(bookId);
+		}
 
+		model.addAttribute("reviews", reviews);
 		return "book/review/detail-list";
 	}
 
