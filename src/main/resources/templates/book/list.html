@@ -136,7 +136,8 @@
 					</div>
 
 					<!-- 本棚に追加した書籍 ページネーション -->
-					<nav aria-label="Page navigation">
+					<nav aria-label="Page navigation"
+						th:if="${!#lists.isEmpty(addedBooks.items)}">
 						<ul class="pagination justify-content-center mt-4">
 
 							<!-- 前へ -->

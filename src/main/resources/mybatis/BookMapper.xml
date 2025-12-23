@@ -43,7 +43,7 @@
 		AND b.status = 'ACT'
 	</select>
 
-	<!-- 検索 + ソート + ページング -->
+	<!-- 検索 + ソート(manual=1) + ページング -->
 	<select id="findBySearch" parameterType="map"
 		resultMap="BookResultMap">
 		SELECT
