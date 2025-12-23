@@ -8,15 +8,18 @@ import com.example.app.enums.ReadingStatus;
 
 public interface UserBookService {
 
-	// 1件取得
-	UserBook getById(Integer id);
+	// 1件取得(アクティブID(画面専用)/is_deleted=0)
+	UserBook getActiveById(Integer userBookId);
+	
+	// 1件取得(管理用途/is_deleted無し)
+	UserBook getAnyById(Integer userBookId);
 
-	// 本棚一覧取得
-	List<UserBook> getByUserId(Integer userId);
+	// 本棚一覧取得(画面用)
+	List<UserBook> getActiveByUserId(Integer userId);
 
 	// 登録
 	int add(Integer userId, Integer bookId);
-	
+
 	// 重複登録チェック
 	boolean exists(Integer userId, Integer bookId);
 
@@ -26,11 +29,11 @@ public interface UserBookService {
 	// 本棚から外す（論理物理両対応）
 	void remove(Integer userBookId);
 
-	// SEARCH登録
-	void addFromSearch(Integer userId, Integer bookId);
-
 	// MANUAL登録
 	void addManual(Integer userId, Book book);
+	
+	// SEARCH登録
+	// void addFromSearch(Integer userId, Integer bookId);
 
 	// 論理削除(内部用)
 	// int softDelete(Integer id);
@@ -51,5 +54,9 @@ public interface UserBookService {
 
 	// ユーザー作成書籍
 	List<UserBook> getManualBooksByUser(Integer userId);
+	
+	// UserId + bookIdからUserBookを取得(非表示)
+	// UserBook getByUserAndBook(Integer userId, Integer bookId);
+
 
 }

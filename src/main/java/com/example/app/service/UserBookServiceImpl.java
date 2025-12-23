@@ -24,22 +24,30 @@ public class UserBookServiceImpl implements UserBookService {
 	private final UserBookMapper userBookMapper;
 	private final BookMapper bookMapper;
 
+	// 注：exists/getByUserAndBook/Map使用は旧設計(バグる可能性有)
+
 	// loginUserIdを取得
 	private Integer getLoginUserId() {
 		return (Integer) RequestContextHolder.currentRequestAttributes()
 				.getAttribute("loginUserId", RequestAttributes.SCOPE_SESSION);
 	}
 
-	// 1件取得
+	// 1件取得(アクティブID(画面専用)/is_deleted=0)
 	@Override
-	public UserBook getById(Integer id) {
-		return userBookMapper.selectById(id);
+	public UserBook getActiveById(Integer userBookId) {
+		return userBookMapper.selectActiveById(userBookId);
 	}
 
-	// 本棚一覧取得
+	// 1件取得(管理用途/is_deleted無し)
 	@Override
-	public List<UserBook> getByUserId(Integer userId) {
-		return userBookMapper.selectByUserId(userId);
+	public UserBook getAnyById(Integer userBookId) {
+		return userBookMapper.selectAnyById(userBookId);
+	}
+
+	// 本棚一覧取得(画面用)
+	@Override
+	public List<UserBook> getActiveByUserId(Integer userId) {
+		return userBookMapper.selectActiveByUserId(userId);
 	}
 
 	// 登録
@@ -49,6 +57,11 @@ public class UserBookServiceImpl implements UserBookService {
 		// ログインユーザー以外への登録は禁止
 		if (!userId.equals(getLoginUserId())) {
 			throw new RuntimeException("不正なアクセスです。");
+		}
+
+		// すでにアクティブなら何もしないor例外
+		if (exists(userId, bookId)) {
+			throw new RuntimeException("すでに本棚に追加されています");
 		}
 
 		// 論理削除済みがある→復活
@@ -70,20 +83,13 @@ public class UserBookServiceImpl implements UserBookService {
 
 		return userBookMapper.insert(ub);
 	}
-	
-	// 重複登録チェック
-	@Override
-	public boolean exists(Integer userId, Integer bookId) {
-		UserBook active = userBookMapper.selectActive(userId, bookId);
-    return active != null;
-	}
 
 	// 更新
 	@Override
 	public int update(Integer id, Integer rating, ReadingStatus status, String memo) {
 
 		// 対象データ取得、ログインユーザー以外ならエラー
-		UserBook db = userBookMapper.selectById(id);
+		UserBook db = userBookMapper.selectActiveById(id);
 		if (db == null || !db.getUserId().equals(getLoginUserId())) {
 			throw new RuntimeException("不正なアクセスです。");
 		}
@@ -96,21 +102,20 @@ public class UserBookServiceImpl implements UserBookService {
 		return userBookMapper.update(ub);
 	}
 
-	// 本棚から外す（論理物理両対応）
+	// 本棚から外す(削除操作は管理用途/selectAnyById)
 	@Override
 	public void remove(Integer userBookId) {
-		UserBook db = userBookMapper.selectById(userBookId);
+		UserBook db = userBookMapper.selectAnyById(userBookId);
 		if (db == null || !db.getUserId().equals(getLoginUserId())) {
 			throw new RuntimeException("不正なアクセスです。");
 		}
 
-		// manual=true → search由来
-		boolean isSearchBook = db.getBook().getManual();
+		boolean isManualBook = db.getBook().getManual();
 
-		if (isSearchBook) {
-			userBookMapper.softDelete(userBookId);
+		if (isManualBook) {
+			userBookMapper.hardDelete(userBookId); // MANUALは物理削除
 		} else {
-			userBookMapper.hardDelete(userBookId);
+			userBookMapper.softDelete(userBookId); // SEARCHは論理削除
 		}
 	}
 
@@ -124,7 +129,7 @@ public class UserBookServiceImpl implements UserBookService {
 			int page) {
 
 		final int PAGE_SIZE = 10;
-		
+
 		// pageが1未満なら1に補正
 		int safePage = Math.max(page, 1);
 		int offset = (safePage - 1) * PAGE_SIZE;
@@ -139,26 +144,18 @@ public class UserBookServiceImpl implements UserBookService {
 		return new PaginatedResult<>(list, totalCount, totalPages, safePage);
 	}
 
-	// SEARCH登録
-	public void addFromSearch(Integer userId, Integer bookId) {
-
-		UserBook ub = new UserBook();
-		ub.setUserId(userId);
-		ub.setBookId(bookId);
-		ub.setSource(BookSource.SEARCH);
-		ub.setStatus(ReadingStatus.UNSPECIFIED);
-		ub.setIsDeleted(false);
-
-		userBookMapper.insert(ub);
-	}
-
 	// MANUAL登録
 	public void addManual(Integer userId, Book book) {
 
-		// ① Book を作る
+		// ログインユーザー検証
+		if (!userId.equals(getLoginUserId())) {
+			throw new RuntimeException("不正なアクセスです。");
+		}
+
+		// Bookを作る
 		bookMapper.insert(book);
 
-		// ② UserBook を作る
+		// UserBookを作る
 		UserBook ub = new UserBook();
 		ub.setUserId(userId);
 		ub.setBookId(book.getId());
@@ -181,7 +178,16 @@ public class UserBookServiceImpl implements UserBookService {
 		return userBookMapper.selectManualBooksByUser(userId);
 	}
 
-	/*
+	// 重複登録チェック アクティブなUserBookが存在するか(is_deleted=0)
+	// (int→boolean変換)
+	@Override
+	public boolean exists(Integer userId, Integer bookId) {
+		return userBookMapper.exists(userId, bookId) > 0;
+	}
+
+	/* *****************
+	 * 未使用
+	 * *****************
 	// 論理削除(内部用)
 	@Override
 	public int softDelete(Integer id) {
@@ -207,6 +213,32 @@ public class UserBookServiceImpl implements UserBookService {
 	
 		return mapper.hardDelete(id);
 	}
-	*/
+	
+		// UserId + bookIdからUserBookを取得
+	@Deprecated
+	public UserBook getByUserAndBook(Integer userId, Integer bookId) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("userId", userId);
+		params.put("bookId", bookId);
+		return userBookMapper.selectActive(userId, bookId);
+	}
+	
+		// SEARCH登録
+	public void addFromSearch(Integer userId, Integer bookId) {
+	
+		UserBook ub = new UserBook();
+		ub.setUserId(userId);
+		ub.setBookId(bookId);
+		ub.setSource(BookSource.SEARCH);
+		ub.setStatus(ReadingStatus.UNSPECIFIED);
+		ub.setIsDeleted(false);
+	
+		userBookMapper.insert(ub);
+	}
+	
+	
+	***************** *
+	未使用
+	***************** */
 
 }

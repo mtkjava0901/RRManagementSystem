@@ -3,20 +3,26 @@ package com.example.app.controller;
 import java.util.List;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.app.domain.Book;
 import com.example.app.domain.User;
 import com.example.app.domain.UserBook;
 import com.example.app.enums.ReadingStatus;
+import com.example.app.service.BookService;
 import com.example.app.service.PaginatedResult;
+import com.example.app.service.ReviewService;
 import com.example.app.service.UserBookService;
 
 import lombok.RequiredArgsConstructor;
@@ -26,7 +32,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserBookController {
 
+	private final BookService bookService;
 	private final UserBookService userBookService;
+	private final ReviewService reviewService;
 	private final HttpSession session;
 
 	// ログイン中はユーザーIDを取得
@@ -70,6 +78,41 @@ public class UserBookController {
 		return "book/list";
 	}
 
+	// 書籍詳細
+	@GetMapping("/detail/{id}")
+	public String bookDetail(
+			@PathVariable Integer id,
+			Model model) {
+
+		Integer userId = getLoginUserId();
+		if (userId == null)
+			return "redirect:/login";
+
+		// セッションからユーザー取得
+		User user = (User) session.getAttribute("user");
+		if (user != null) {
+			model.addAttribute("username", user.getName());
+		}
+
+		Book book = bookService.selectById(id); // id=BookId
+		if (book == null)
+			return "redirect:/book/list"; // 本が存在しない場合もリダイレクト
+		model.addAttribute("book", book);
+
+		// レビュー可能判定(UserBookが存在 & manual=1)
+		UserBook ub = reviewService.findReviewableUserBook(userId, id); // id=BookId
+		if (ub == null)
+			return "redirect:/book/list"; // 本棚にない場合はリダイレクト
+		model.addAttribute("userBook", ub);
+
+		// boolean reviewable = reviewService.isReviewable(ub); // 使わない
+		boolean reviewable = (ub != null && book.getManual());
+		model.addAttribute("reviewable", reviewable);
+
+		return "book/detail";
+
+	}
+
 	// 本棚への追加（redirect後も同条件で再検索）
 	@PostMapping("/add-booklist")
 	public String addBookList(
@@ -104,55 +147,43 @@ public class UserBookController {
 		return "redirect:/book/search";
 	}
 
-	// 書籍詳細
-	@GetMapping("/detail/{id}")
-	public String bookDetail(
-			@PathVariable Integer id,
+	// 書籍更新処理
+	@PostMapping("/update")
+	public String update(
+			@Valid @ModelAttribute("userBook") UserBook userBook,
+			BindingResult br,
+			@RequestParam Integer id,
+			@RequestParam(required = false) Integer rating,
+			@RequestParam ReadingStatus status,
+			@RequestParam String memo,
+			RedirectAttributes ra,
 			Model model) {
 
 		Integer userId = getLoginUserId();
 		if (userId == null)
 			return "redirect:/login";
 
-		// セッションからユーザー取得
-		User user = (User) session.getAttribute("user");
-		if (user != null) {
-			model.addAttribute("username", user.getName());
-		}
-
-		UserBook ub = userBookService.getById(id);
-
-		// 不正アクセス防止
+		UserBook ub = userBookService.getActiveById(id);
 		if (ub == null || !ub.getUserId().equals(userId)) {
 			return "redirect:/book/list";
 		}
 
-		// List<Review> reviews = bookService.findReviewsByBookId(id); // レビュー用
-		model.addAttribute("book", ub);
-
-		return "book/detail";
-	}
-
-	// 書籍更新処理
-	@PostMapping("/update")
-	public String update(
-			@RequestParam Integer id,
-			@RequestParam(required = false) Integer rating,
-			@RequestParam ReadingStatus status,
-			@RequestParam String memo) {
-
-		Integer userId = getLoginUserId();
-		if (userId == null)
-			return "redirect:/login";
-
-		UserBook ub = userBookService.getById(id);
-		if (ub == null || !ub.getUserId().equals(userId)) {
-			return "redirect:/book/list";
+		// バリデーションエラーの処理
+		if (br.hasErrors()) {
+			model.addAttribute("book", ub.getBook());
+			model.addAttribute("userBook", ub);
+			model.addAttribute("openEditModal", true);
+			return "book/detail";
 		}
 
+		// 更新
 		userBookService.update(id, rating, status, memo);
 
-		return "redirect:/book/detail/" + id;
+		// 成功メッセージ
+		String bookTitle = ub.getBook().getTitle();
+		ra.addFlashAttribute("successMessage", "「" + bookTitle + "」のマイデータ入力が完了しました");
+
+		return "redirect:/book/list";
 	}
 
 	// 書籍削除(論理/物理統合済み)
